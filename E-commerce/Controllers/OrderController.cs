@@ -1,78 +1,107 @@
-﻿using Elibri.DTOs.DTOS;
+﻿using API.Web;
+using Elibri.DTOs.DTOS;
 using Elibri.Services.OrderServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _OrderService;
+        private readonly IOrderService _orderService;
 
-
-        public OrderController(IOrderService OrderService)
+        public OrderController(IOrderService orderService)
         {
-            _OrderService = OrderService;
-
-
+            _orderService = orderService;
         }
 
+        /// <summary>
+        /// Получение всех заказов
+        /// </summary>
+        /// <remarks>
+        /// Для получения заказов нужно авторизироваться
+        /// </remarks>
         [HttpGet]
+        [Route(Routes.GetAllOrdersRoute)]
         [Authorize(Roles = "User")]
         public async Task<ActionResult<List<OrderDTO>>> GetAllOrders()
         {
-            var Orders = await _OrderService.GetAllAsync();
-            if (Orders == null)
-            {
-                return Ok(new List<OrderDTO>());
-            }
-            return Ok(Orders);
+            var orders = await _orderService.GetAllAsync();
+            return Ok(orders);
         }
-        [HttpGet("{id}")]
+
+        /// <summary>
+        /// Получение корзины по UserId и OrderId
+        /// </summary>
+        /// <remarks>
+        /// Для получения заказов нужно авторизироваться, ввести UserId и OrderId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetOrderByIdRoute)]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<OrderDTO>> GetOrderById(int id)
         {
-            var Order = await _OrderService.GetByIdAsync(id);
-            if (Order == null)
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return Ok(Order);
+            return Ok(order);
         }
 
+        /// <summary>
+        /// Создание заказа
+        /// </summary>
+        /// <remarks>
+        /// Для создания заказа нужно авторизироваться, ввести UserId и OrderId
+        /// </remarks>
         [HttpPost]
-        public async Task<ActionResult<OrderDTO>> CreateOrder(OrderDTO OrderDTO)
+        [Route(Routes.CreateOrderRoute)]
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult<OrderDTO>> CreateOrder(OrderDTO orderDTO)
         {
-            var createdOrder = await _OrderService.CreateAsync(OrderDTO);
-
+            var createdOrder = await _orderService.CreateAsync(orderDTO);
             return Ok(createdOrder);
         }
 
-        [HttpPut("{id}")]
+        /// <summary>
+        /// Обновление заказа
+        /// </summary>
+        /// <remarks>
+        /// Для обновления заказа нужно авторизироваться, ввести UserId и OrderId
+        /// </remarks>
+        [HttpPut]
+        [Route(Routes.UpdateOrderRoute)]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Update(int id, OrderDTO OrderDTO)
+        public async Task<IActionResult> Update(int id, OrderDTO orderDTO)
         {
-            var existingDto = await _OrderService.GetByIdAsync(id);
+            var existingDto = await _orderService.GetByIdAsync(id);
             if (existingDto == null)
             {
                 return NotFound();
             }
-            await _OrderService.UpdateAsync(OrderDTO);
+            await _orderService.UpdateAsync(orderDTO);
             return Ok("Товар успешно обновлён.");
         }
 
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// Удаление заказа по UserId и OrderId
+        /// </summary>
+        /// <remarks>
+        /// Для удаления заказа нужно авторизироваться и ввести UserId и OrderId
+        /// </remarks>
+        [HttpDelete]
+        [Route(Routes.DeleteOrderRoute)]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            await _OrderService.DeleteAsync(id);
+            await _orderService.DeleteAsync(id);
             return Ok("Товар успешно удалён.");
         }
-
-
     }
-
-
 }
-

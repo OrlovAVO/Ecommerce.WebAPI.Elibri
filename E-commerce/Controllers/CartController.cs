@@ -2,10 +2,8 @@
 using Elibri.DTOs.DTOS;
 using Elibri.Services.CartServices;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-
 
 
 namespace API.Controllers
@@ -14,11 +12,11 @@ namespace API.Controllers
 
     public class CartController : ControllerBase
     {
-        private readonly ICartService _CartService;
+        private readonly ICartService _cartService;
 
-        public CartController(ICartService CartService)
+        public CartController(ICartService cartService)
         {
-            _CartService = CartService;
+            _cartService = cartService;
         }
 
         /// <summary>
@@ -30,14 +28,16 @@ namespace API.Controllers
         [HttpGet]
         [Route(Routes.GetCartsRoute)]
         [Authorize(Roles = "User")]
+        [ProducesResponseType(typeof(List<CartDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<List<CartDTO>>> GetAllCarts()
         {
-            var Carts = await _CartService.GetAllAsync();
-            if (Carts == null)
+            var carts = await _cartService.GetAllAsync();
+            if (carts == null)
             {
                 return Ok(new List<CartDTO>());
             }
-            return Ok(Carts);
+            return Ok(carts);
         }
 
         /// <summary>
@@ -49,14 +49,16 @@ namespace API.Controllers
         [HttpGet]
         [Route(Routes.GetCartByIdRoute)]
         [Authorize(Roles = "User")]
+        [ProducesResponseType(typeof(CartDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CartDTO>> GetCartById(int id)
         {
-            var Cart = await _CartService.GetByIdAsync(id);
-            if (Cart == null)
+            var cart = await _cartService.GetByIdAsync(id);
+            if (cart == null)
             {
                 return NotFound();
             }
-            return Ok(Cart);
+            return Ok(cart);
         }
 
         /// <summary>
@@ -68,10 +70,11 @@ namespace API.Controllers
         [HttpPost]
         [Route(Routes.CreateCartRoute)]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<CartDTO>> CreateCart(CartDTO CartDTO)
+        [ProducesResponseType(typeof(CartDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CartDTO>> CreateCart(CartDTO cartDTO)
         {
-            var createdCart = await _CartService.CreateAsync(CartDTO);
-
+            var createdCart = await _cartService.CreateAsync(cartDTO);
             return Ok(createdCart);
         }
 
@@ -84,14 +87,16 @@ namespace API.Controllers
         [HttpPut]
         [Route(Routes.UpdateCartByIdRoute)]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Update(int id, CartDTO CartDTO)
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Update(int id, CartDTO cartDTO)
         {
-            var existingDto = await _CartService.GetByIdAsync(id);
+            var existingDto = await _cartService.GetByIdAsync(id);
             if (existingDto == null)
             {
                 return NotFound();
             }
-            await _CartService.UpdateAsync(CartDTO);
+            await _cartService.UpdateAsync(cartDTO);
             return Ok("Успешно обновлено.");
         }
 
@@ -104,13 +109,12 @@ namespace API.Controllers
         [HttpDelete]
         [Route(Routes.DeleteCartByIdRoute)]
         [Authorize(Roles = "User")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteCart(int id)
         {
-            await _CartService.DeleteAsync(id);
+            await _cartService.DeleteAsync(id);
             return Ok("Успешно удалено.");
         }
     }
-
-
 }
-
