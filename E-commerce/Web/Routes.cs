@@ -54,10 +54,14 @@
 
         #region Order
 
-        private const string CurrencyRouteSegment = "salary";
-        private const string CurrencyRoute = $"{StartRouteSegment}/{CurrencyRouteSegment}";
+        private const string OrderRouteSegment = "order";
+        private const string OrderRoute = $"{StartRouteSegment}/{OrderRouteSegment}";
 
-        public const string GetUserCurrencyRoute = $"{CurrencyRoute}/currency";
+        public const string GetAllOrdersRoute = $"{OrderRoute}/all";
+        public const string GetOrderByIdRoute = $"{OrderRoute}/{{orderId}}";
+        public const string CreateOrderRoute = $"{OrderRoute}/create";
+        public const string UpdateOrderRoute = $"{OrderRoute}/update";
+        public const string DeleteOrderRoute = $"{OrderRoute}/delete";
 
         #endregion
 

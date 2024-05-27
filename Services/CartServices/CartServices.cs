@@ -1,18 +1,49 @@
-﻿using AutoMapper;
-using Elibri.DTOs.DTOS;
-using Elibri.Models;
-using Elibri.Repositories.CartRepo;
-using Elibri.Services.GenericServices;
-
+﻿using Elibri.DTOs.DTOS;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Elibri.Services.CartServices
 {
-    public class CartService : GenericService<Cart, CartDTO>, ICartService
+    public class CartService : ICartService
     {
-        public CartService(ICartRepository repository, IMapper mapper)
-            : base(repository, mapper)
-        {
+        private readonly List<CartDTO> _carts = new List<CartDTO>();
 
+        public async Task<List<CartDTO>> GetAllAsync()
+        {
+            return await Task.FromResult(_carts);
+        }
+
+        public async Task<CartDTO> GetByIdAsync(int id)
+        {
+            var cart = _carts.FirstOrDefault(c => c.CartId == id);
+            return await Task.FromResult(cart);
+        }
+
+        public async Task<CartDTO> CreateAsync(CartDTO cartDTO)
+        {
+            _carts.Add(cartDTO);
+            return await Task.FromResult(cartDTO);
+        }
+
+        public async Task UpdateAsync(CartDTO cartDTO)
+        {
+            var existingCart = _carts.FirstOrDefault(c => c.CartId == cartDTO.CartId);
+            if (existingCart != null)
+            {
+                existingCart.UserId = cartDTO.UserId;
+            }
+            await Task.CompletedTask;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var cart = _carts.FirstOrDefault(c => c.CartId == id);
+            if (cart != null)
+            {
+                _carts.Remove(cart);
+            }
+            await Task.CompletedTask;
         }
     }
 }
