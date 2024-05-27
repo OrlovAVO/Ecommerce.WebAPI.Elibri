@@ -6,33 +6,27 @@ using Elibri.Repositories.GenericRepo;
 using Elibri.Repositories.OrderDetailsRepo;
 using Elibri.Repositories.OrderRepo;
 using Elibri.Repositories.ProductRepo;
-using Elibri.Repositories.UserRepo;
 using Elibri.Repositories.ReviewRepo;
+using Elibri.Repositories.UserRepo;
 using Elibri.Services.AuthServices;
-using Elibri.Services.TokenServices;
 using Elibri.Services.CartServices;
 using Elibri.Services.CategoryServices;
+using Elibri.Services.EmailServices;
+using Elibri.Services.Mapper;
 using Elibri.Services.OrderDetailsServices;
 using Elibri.Services.OrderServices;
 using Elibri.Services.ProductServices;
-using Elibri.Services.UserServices;
+using Elibri.Services.ResetServices;
 using Elibri.Services.ReviewServices;
+using Elibri.Services.TokenServices;
+using Elibri.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Elibri.Services.Mapper;
-using Elibri.Services.EmailServices;
-using Elibri.Services.ResetServices;
-using Microsoft.Extensions.Options;
 
 namespace API
 {
@@ -42,8 +36,12 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Load configuration
+            IConfiguration configuration = builder.Configuration;
+
             // Add services to the container
-            builder.Services.AddDbContext<Context>();
+            builder.Services.AddDbContext<Context>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -104,6 +102,11 @@ namespace API
                         new string[] {}
                     }
                 });
+
+                // Include XML comments
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             // AutoMapper
@@ -117,7 +120,7 @@ namespace API
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.WithOrigins(configuration["FrontendUrl"], "http://25.49.57.113:3000")
                            .AllowAnyHeader()
                            .AllowAnyMethod();
                 });
@@ -143,11 +146,11 @@ namespace API
             {
                 op.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:Key"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:Key"])),
                     ValidateIssuerSigningKey = true,
-                    ValidAudience = builder.Configuration["jwt:audience"],
+                    ValidAudience = configuration["jwt:audience"],
                     ValidateAudience = true,
-                    ValidIssuer = builder.Configuration["jwt:issuer"],
+                    ValidIssuer = configuration["jwt:issuer"],
                     ValidateIssuer = true,
                 };
 
@@ -170,6 +173,14 @@ namespace API
                 app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; connect-src 'self' http://25.49.57.113:3000");
+                await next();
+            });
+
+
 
             app.UseCors();
 

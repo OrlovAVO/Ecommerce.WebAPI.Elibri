@@ -2,7 +2,7 @@
 {
     public class Routes
     {
-        private const string StartRouteSegment = "ys/v1";
+        private const string StartRouteSegment = "eb/v1";
 
         #region Auth
 
@@ -10,12 +10,27 @@
         private const string AuthRoute = $"{StartRouteSegment}/{AuthRouteSegment}";
 
         public const string RegistrationRoute = $"{AuthRoute}/registration";
-        public const string EmailLoginRoute = $"{AuthRoute}/loginemail";
-        public const string PhoneLoginRoute = $"{AuthRoute}/loginphone";
+        public const string AdminRegistrationRoute = $"{AuthRoute}/admin_registration";
+        public const string LoginRoute = $"{AuthRoute}/login";
+        public const string ResetPassword = $"{AuthRoute}/resetpassword";
+        public const string ChangePassword = $"{AuthRoute}/changepassword";
 
         #endregion
 
         #region Cart
+
+        private const string CartRouteSegment = "cart";
+        private const string CartRoute = $"{StartRouteSegment}/{CartRouteSegment}";
+
+        public const string GetCartsRoute = $"{CartRoute}/all";
+        public const string GetCartByIdRoute = $"{CartRoute}/{{cartId}}";
+        public const string CreateCartRoute = $"{CartRoute}/create";
+        public const string UpdateCartByIdRoute = $"{CartRoute}/update";
+        public const string DeleteCartByIdRoute = $"{CartRoute}/delete";
+
+        #endregion
+
+        #region Category
 
         private const string CategoriesRouteSegment = "categories";
         private const string CategoriesRoute = $"{StartRouteSegment}/{CategoriesRouteSegment}";

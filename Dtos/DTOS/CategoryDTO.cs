@@ -14,6 +14,3 @@ namespace Elibri.DTOs.DTOS
 
     }
 }
-/*nnezqoibbqpqqexb;
-nnezqoibbqpqqexb
-nnezqoibbqpqqexb*/

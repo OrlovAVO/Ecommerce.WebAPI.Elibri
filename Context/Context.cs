@@ -1,6 +1,7 @@
 ﻿using Elibri.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Elibri.Context
@@ -8,16 +9,26 @@ namespace Elibri.Context
 
     public class Context : IdentityDbContext
     {
+
+
+        private readonly IConfiguration _configuration;
+
+        public Context(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Review> Reviews { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=pass",
-                b => b.MigrationsAssembly("Elibri.API"));
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("Elibri.API"));
             base.OnConfiguring(optionsBuilder);
         }
 
