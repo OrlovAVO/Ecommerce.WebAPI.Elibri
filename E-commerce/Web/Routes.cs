@@ -36,9 +36,10 @@
         private const string CategoriesRoute = $"{StartRouteSegment}/{CategoriesRouteSegment}";
 
         public const string GetCategoriesRoute = $"{CategoriesRoute}/all";
-        public const string GetCategoryRoute = $"{CategoriesRoute}/{{categoryId}}";
-        public const string AddCategoryRoute = $"{CategoriesRoute}/add";
-        public const string EditCategoryRoute = $"{CategoriesRoute}/edit";
+        public const string GetCategoryByIdRoute = $"{CategoriesRoute}/{{categoryId}}";
+        public const string CreateCategoryRoute = $"{CategoriesRoute}/create";
+        public const string UpdateCategoryRoute = $"{CategoriesRoute}/update";
+        public const string DeleteCategoryRoute = $"{CategoriesRoute}/delete";
 
         #endregion
 
@@ -54,10 +55,14 @@
 
         #region Order
 
-        private const string CurrencyRouteSegment = "salary";
-        private const string CurrencyRoute = $"{StartRouteSegment}/{CurrencyRouteSegment}";
+        private const string OrderRouteSegment = "order";
+        private const string OrderRoute = $"{StartRouteSegment}/{OrderRouteSegment}";
 
-        public const string GetUserCurrencyRoute = $"{CurrencyRoute}/currency";
+        public const string GetAllOrdersRoute = $"{OrderRoute}/all";
+        public const string GetOrderByIdRoute = $"{OrderRoute}/{{orderId}}";
+        public const string CreateOrderRoute = $"{OrderRoute}/create";
+        public const string UpdateOrderRoute = $"{OrderRoute}/update";
+        public const string DeleteOrderRoute = $"{OrderRoute}/delete";
 
         #endregion
 

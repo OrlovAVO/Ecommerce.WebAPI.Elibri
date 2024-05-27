@@ -1,12 +1,15 @@
 ﻿using Elibri.DTOs.DTOS;
-using Elibri.Services.GenericServices;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Elibri.Services.CartServices
 {
-    public interface ICartService : IGenericService<CartDTO> { }
+    public interface ICartService
+    {
+        Task<List<CartDTO>> GetAllAsync();
+        Task<CartDTO> GetByIdAsync(int id);
+        Task<CartDTO> CreateAsync(CartDTO cartDTO);
+        Task UpdateAsync(CartDTO cartDTO);
+        Task DeleteAsync(int id);
+    }
 }
