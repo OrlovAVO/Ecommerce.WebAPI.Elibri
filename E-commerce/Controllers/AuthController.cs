@@ -12,6 +12,8 @@ using Elibri.Services.ResetServices;
 using Serilog;
 using Elibri.Repositories.UserRepo;
 using Elibri.Models;
+using API.Web;
+using System.Net;
 
 
 namespace API.Controllers
@@ -19,6 +21,7 @@ namespace API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -38,31 +41,63 @@ namespace API.Controllers
             _userManager = userManager;
 
         }
-
-        [HttpPost("RegisterAdmin")]
-/*        [Authorize(Roles = "Admin")]*/
+        /// <summary>
+        /// Регистрация нового Admin
+        /// </summary>
+        /// <remarks>
+        /// Для регистрации нужен username, email и пароль
+        /// </remarks>
+        [HttpPost]
+        [Route(Routes.AdminRegistrationRoute)]
+        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin(RegisterDto model)
         {
             return await _authService.RegisterAdmin(model);
         }
 
-        [HttpPost("RegisterUser")]
+        /// <summary>
+        /// Регистрация нового User
+        /// </summary>
+        /// <remarks>
+        /// Для регистрации нужен username, email и пароль
+        /// </remarks>
+        [HttpPost]
+        [Route(Routes.RegistrationRoute)]
+        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RegisterUser(RegisterDto model)
         {
             return await _authService.RegisterUser(model);
         }
-        /*            [HttpPost]
-                    [Route(Routes.EmailLoginRoute)]
-                    [ProducesResponseType(typeof(AuthResponse), (int)HttpStatusCode.OK)]
-                    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]*/
-        [HttpPost("Login")]
+
+        /// <summary>
+        /// Вход и получение токена через UserName
+        /// </summary>
+        /// <remarks>
+        /// Для аутентификации необходимо ввести Username и пароль
+        /// </remarks>
+        /// <returns>Токен</returns>
+        [HttpPost]
+        [Route(Routes.LoginRoute)]
+        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login(LoginDto model)
         {
             return await _authService.Login(model);
         }
 
-
-        [HttpPost("Reset-password")]
+        /// <summary>
+        /// Сброс пароля по email
+        /// </summary>
+        /// <remarks>
+        /// Для сброса пароля нужно указать email
+        /// </remarks>
+        [HttpPost]
+        [Route(Routes.ResetPassword)]
+        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ResetPassword(ResetPasswordDTO model)
         {
             if (ModelState.IsValid)
@@ -80,9 +115,17 @@ namespace API.Controllers
             }
             return BadRequest(ModelState);
         }
-
-        [HttpPost("Change-password")]
-        [Authorize] // Для ограничения доступа только для аутентифицированных пользователей
+        /// <summary>
+        /// Смена пароля через авторизированный аккаунт
+        /// </summary>
+        /// <remarks>
+        /// Для сброса пароля нужно указать старый пароль
+        /// </remarks>
+        [HttpPost]
+        [Route(Routes.ChangePassword)]
+        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [Authorize(Roles = "User")] 
         public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
         {
             if (ModelState.IsValid)

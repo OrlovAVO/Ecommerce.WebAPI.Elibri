@@ -26,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task AddOrUpdateReview(ReviewDTO reviewDto)
         {
             var userId = reviewDto.UserId;
