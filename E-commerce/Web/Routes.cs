@@ -36,9 +36,10 @@
         private const string CategoriesRoute = $"{StartRouteSegment}/{CategoriesRouteSegment}";
 
         public const string GetCategoriesRoute = $"{CategoriesRoute}/all";
-        public const string GetCategoryRoute = $"{CategoriesRoute}/{{categoryId}}";
-        public const string AddCategoryRoute = $"{CategoriesRoute}/add";
-        public const string EditCategoryRoute = $"{CategoriesRoute}/edit";
+        public const string GetCategoryByIdRoute = $"{CategoriesRoute}/{{categoryId}}";
+        public const string CreateCategoryRoute = $"{CategoriesRoute}/create";
+        public const string UpdateCategoryRoute = $"{CategoriesRoute}/update";
+        public const string DeleteCategoryRoute = $"{CategoriesRoute}/delete";
 
         #endregion
 
