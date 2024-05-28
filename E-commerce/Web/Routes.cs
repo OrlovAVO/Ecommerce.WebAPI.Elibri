@@ -79,7 +79,35 @@
         public const string CreateProductRoute = $"{ProductRoute}/create";
         public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
         public const string UpdateProductRoute = $"{ProductRoute}/update";
+        public const string DeleteProductRoute = $"{ProductRoute}/delete";
+
+        #endregion
+
+/*        #region Review
+
+        private const string ReviewRouteSegment = "review";
+        private const string ProductRoute = $"{StartRouteSegment}/{ProductRouteSegment}";
+
+        public const string GetAllProductsRedatilsRoute = $"{ProductRoute}/all";
+        public const string GetProductByIdRoute = $"{ProductRoute}/{{productId}}";
+        public const string CreateProductRoute = $"{ProductRoute}/create";
+        public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
+        public const string UpdateProductRoute = $"{ProductRoute}/update";
         public const string DeleteProdctRoute = $"{ProductRoute}/delete";
+
+        #endregion*/
+
+        #region User
+
+        private const string UserRouteSegment = "user";
+        private const string UserRoute = $"{StartRouteSegment}/{UserRouteSegment}";
+
+        public const string GetAllUserRoute = $"{UserRoute}/all";
+        public const string GetUserByUsernameRoute = $"{UserRoute}/{{username}}";
+        public const string GetUserByIdRoute = $"{UserRoute}/{{userId}}";
+        public const string GetUserRoute = $"{UserRoute}/update";
+        public const string UpdateuserRoute = $"{UserRoute}/update";
+        public const string DeleteUserRoute = $"{UserRoute}/delete";
 
         #endregion
 

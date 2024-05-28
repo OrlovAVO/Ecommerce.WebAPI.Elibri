@@ -1,4 +1,5 @@
-﻿using Elibri.DTOs.DTOS;
+﻿using API.Web;
+using Elibri.DTOs.DTOS;
 using Elibri.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@ namespace Elibri.API.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -20,12 +21,14 @@ namespace Elibri.API.Controllers
         }
 
         [HttpGet]
+        [Route(Routes.GetAllUserRoute)]
         public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
         {
             return await _userService.GetAllAsync();
         }
 
-        [HttpGet("GetByUsername/{username}")]
+        [HttpGet]
+        [Route(Routes.GetUserByUsernameRoute)]
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _userService.GetByUsernameAsync(username);
@@ -36,14 +39,16 @@ namespace Elibri.API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route(Routes.GetUserByIdRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserDTO>> GetUserById(string id)
         {
             return await _userService.GetByIdAsync(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route(Routes.UpdateuserRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(string id, UserDTO userDTO)
         {
@@ -51,7 +56,8 @@ namespace Elibri.API.Controllers
             return Ok("Updated Successfully");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route(Routes.DeleteUserRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {

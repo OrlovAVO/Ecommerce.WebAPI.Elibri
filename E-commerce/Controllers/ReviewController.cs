@@ -8,12 +8,14 @@ using System.Security.Claims;
 using Elibri.Models;
 using Elibri.Context;
 using Microsoft.EntityFrameworkCore;
+using API.Web;
 
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
+    [Route("api/[controller]")]
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;

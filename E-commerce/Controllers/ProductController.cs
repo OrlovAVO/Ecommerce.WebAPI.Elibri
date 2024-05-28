@@ -112,7 +112,7 @@ namespace Elibri.API.Controllers
         /// Для удаления товара нужны права администратора и ввести productId
         /// </remarks>
         [HttpDelete]
-        [Route(Routes.DeleteProdctRoute)]
+        [Route(Routes.DeleteProductRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
