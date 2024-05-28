@@ -69,6 +69,20 @@
 
         #endregion
 
+        #region Product
+
+        private const string ProductRouteSegment = "product";
+        private const string ProductRoute = $"{StartRouteSegment}/{ProductRouteSegment}";
+
+        public const string GetAllProductsRedatilsRoute = $"{ProductRoute}/all";
+        public const string GetProductByIdRoute = $"{ProductRoute}/{{productId}}";
+        public const string CreateProductRoute = $"{ProductRoute}/create";
+        public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
+        public const string UpdateProductRoute = $"{ProductRoute}/update";
+        public const string DeleteProdctRoute = $"{ProductRoute}/delete";
+
+        #endregion
+
 
 
 
