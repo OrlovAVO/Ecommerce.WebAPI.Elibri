@@ -43,16 +43,6 @@
 
         #endregion
 
-        #region Category
-
-        private const string SalaryRouteSegment = "salary";
-        private const string SalaryRoute = $"{StartRouteSegment}/{SalaryRouteSegment}";
-
-        public const string AddSalaryRoute = $"{SalaryRoute}/add";
-        public const string GetSalaryRoute = $"{SalaryRoute}/{{salaryId}}";
-
-        #endregion
-
         #region Order
 
         private const string OrderRouteSegment = "order";
@@ -65,6 +55,21 @@
         public const string DeleteOrderRoute = $"{OrderRoute}/delete";
 
         #endregion
+
+        #region OrderDetails
+
+        private const string OrderDetailsRouteSegment = "order_detail";
+        private const string OrderDetailsRoute = $"{StartRouteSegment}/{OrderDetailsRouteSegment}";
+
+        public const string GetAllOrdersRedatilsRoute = $"{OrderDetailsRoute}/all";
+        public const string GetOrderDetailByIdRoute = $"{OrderDetailsRoute}/{{orderdetailId}}";
+        public const string CreateOrderDetailRoute = $"{OrderDetailsRoute}/create";
+        public const string UpdateOrderDetailRoute = $"{OrderDetailsRoute}/update";
+        public const string DeleteOrderDetailRoute = $"{OrderDetailsRoute}/delete";
+
+        #endregion
+
+
 
 
         /*        #region OrderDetails
