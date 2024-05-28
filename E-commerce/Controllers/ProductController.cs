@@ -1,4 +1,5 @@
-﻿using Elibri.DTOs.DTOS;
+﻿using API.Web;
+using Elibri.DTOs.DTOS;
 using Elibri.Services.ProductServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Elibri.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+
     public class ProductController : ControllerBase
     {
         private readonly IProductService _ProductService;
@@ -17,10 +18,11 @@ namespace Elibri.API.Controllers
             _ProductService = ProductService;
         }
 
-
-
+        /// <summary>
+        /// Получение всех товаров
+        /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Route(Routes.GetAllProductsRedatilsRoute)]
         public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
         {
             var Products = await _ProductService.GetAllAsync();
@@ -30,8 +32,15 @@ namespace Elibri.API.Controllers
             }
             return Ok(Products);
         }
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+
+        /// <summary>
+        /// Получение товара по Id
+        /// </summary>
+        /// <remarks>
+        /// Для получения товара по Id нужно ввести productId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetProductByIdRoute)]
         public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
             var Product = await _ProductService.GetByIdAsync(id);
@@ -42,7 +51,14 @@ namespace Elibri.API.Controllers
             return Ok(Product);
         }
 
+        /// <summary>
+        /// Создание товара
+        /// </summary>
+        /// <remarks>
+        /// Для создания товара нужны права администратора
+        /// </remarks>
         [HttpPost]
+        [Route(Routes.CreateProductRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO ProductDTO)
         {
@@ -51,8 +67,14 @@ namespace Elibri.API.Controllers
             return Ok(createdProduct);
         }
 
-        [HttpGet("ByCategory/{categoryId}")]
-
+        /// <summary>
+        /// Получение товара по categoryId
+        /// </summary>
+        /// <remarks>
+        /// Для получения товара по caregoryId нужно ввести categoryId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetProductByCategoryIdRoute)]
         public async Task<ActionResult<List<ProductDTO>>> GetProductsByCategoryId(int categoryId)
         {
             var products = await _ProductService.GetProductsByCategoryIdAsync(categoryId);
@@ -63,8 +85,14 @@ namespace Elibri.API.Controllers
             return Ok(products);
         }
 
-
-        [HttpPut("{id}")]
+        /// <summary>
+        /// Обновление товара 
+        /// </summary>
+        /// <remarks>
+        /// Для обновления товара нужны права администратора и ввести productId
+        /// </remarks>
+        [HttpPut]
+        [Route(Routes.UpdateProductRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, ProductDTO ProductDTO)
         {
@@ -77,13 +105,23 @@ namespace Elibri.API.Controllers
             return Ok("Товар успешно обновлён.");
         }
 
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// Удаление товара 
+        /// </summary>
+        /// <remarks>
+        /// Для удаления товара нужны права администратора и ввести productId
+        /// </remarks>
+        [HttpDelete]
+        [Route(Routes.DeleteProdctRoute)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _ProductService.DeleteAsync(id);
             return Ok("Товар успешно удалён.");
         }
+
+
+
 
 
         /*        [HttpGet("{id}/reviews")]
