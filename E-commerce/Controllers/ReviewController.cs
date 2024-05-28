@@ -15,7 +15,7 @@ namespace API.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;
@@ -27,7 +27,15 @@ namespace API.Controllers
             _context = context;
         }
 
+
+        /// <summary>
+        /// Создание/обновление отзыва
+        /// </summary>
+        /// <remarks>
+        /// Для создания отзыва нужно авторизироваться
+        /// </remarks>
         [HttpPost]
+        [Route(Routes.AddOrUpdateReviewRoute)]
         [Authorize(Roles = "User")]
         public async Task AddOrUpdateReview(ReviewDTO reviewDto)
         {
@@ -58,7 +66,15 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
         }
 
-        [HttpDelete("{reviewId}")]
+
+        /// <summary>
+        /// Удаление отзыва 
+        /// </summary>
+        /// <remarks>
+        ///Для удаления отзыва нужно авторизироваться и ввести reviewId
+        /// </remarks>
+        [HttpDelete]
+        [Route(Routes.DeleteReviewRoute)]
         [Authorize]
         public async Task DeleteReview(int reviewId)
         {
@@ -71,21 +87,44 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("product/{productId}/reviews")]
+        /// <summary>
+        /// Получение отзыва по productId
+        /// </summary>
+        /// <remarks>
+        ///Для получения отзыва нужно ввести productId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetReviewsByProductRoute)]
         public IActionResult GetReviewsByProduct(int productId)
         {
             var reviews = _reviewService.GetReviewsByProduct(productId);
             return Ok(reviews);
         }
 
-        [HttpGet("product/{productId}/rating")]
+
+        /// <summary>
+        /// Получение рейтинга товара
+        /// </summary>
+        /// <remarks>
+        /// Для получение рейтинга товара нужно ввести productId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetProductRatingRoute)]
         public IActionResult GetProductRating(int productId)
         {
             var rating = _reviewService.GetProductRating(productId);
             return Ok(rating);
         }
 
-        [HttpGet("product/{productId}/count")]
+
+        /// <summary>
+        /// Получение количество отзывов товара
+        /// </summary>
+        /// <remarks>
+        /// Для получение всех отзывов товара нужно ввести productId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetReviewCountRoute)]
         public IActionResult GetReviewCount(int productId)
         {
             var count = _reviewService.GetReviewCount(productId);

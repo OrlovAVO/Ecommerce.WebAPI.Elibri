@@ -25,7 +25,7 @@ namespace API.Controllers
         /// Для получения всех деталей всех заказов нужно авторизироваться
         /// </remarks>
         [HttpGet]
-        [Route(Routes.GetAllOrdersRedatilsRoute)]
+        [Route(Routes.GetAllOrdersDetailsRoute)]
         [Authorize(Roles = "User")]
         public async Task<ActionResult<List<OrderDetailDTO>>> GetAllOrderDetailss()
         {

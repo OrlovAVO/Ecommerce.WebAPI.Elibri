@@ -22,7 +22,7 @@ namespace Elibri.API.Controllers
         /// Получение всех товаров
         /// </summary>
         [HttpGet]
-        [Route(Routes.GetAllProductsRedatilsRoute)]
+        [Route(Routes.GetAllProductsRoute)]
         public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
         {
             var Products = await _ProductService.GetAllAsync();

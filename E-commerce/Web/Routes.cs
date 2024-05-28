@@ -61,7 +61,7 @@
         private const string OrderDetailsRouteSegment = "order_detail";
         private const string OrderDetailsRoute = $"{StartRouteSegment}/{OrderDetailsRouteSegment}";
 
-        public const string GetAllOrdersRedatilsRoute = $"{OrderDetailsRoute}/all";
+        public const string GetAllOrdersDetailsRoute = $"{OrderDetailsRoute}/all";
         public const string GetOrderDetailByIdRoute = $"{OrderDetailsRoute}/{{orderdetailId}}";
         public const string CreateOrderDetailRoute = $"{OrderDetailsRoute}/create";
         public const string UpdateOrderDetailRoute = $"{OrderDetailsRoute}/update";
@@ -74,7 +74,7 @@
         private const string ProductRouteSegment = "product";
         private const string ProductRoute = $"{StartRouteSegment}/{ProductRouteSegment}";
 
-        public const string GetAllProductsRedatilsRoute = $"{ProductRoute}/all";
+        public const string GetAllProductsRoute = $"{ProductRoute}/all";
         public const string GetProductByIdRoute = $"{ProductRoute}/{{productId}}";
         public const string CreateProductRoute = $"{ProductRoute}/create";
         public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
@@ -83,19 +83,19 @@
 
         #endregion
 
-/*        #region Review
+        #region Review
 
         private const string ReviewRouteSegment = "review";
-        private const string ProductRoute = $"{StartRouteSegment}/{ProductRouteSegment}";
+        private const string ReviewRoute = $"{StartRouteSegment}/{ReviewRouteSegment}";
 
-        public const string GetAllProductsRedatilsRoute = $"{ProductRoute}/all";
-        public const string GetProductByIdRoute = $"{ProductRoute}/{{productId}}";
-        public const string CreateProductRoute = $"{ProductRoute}/create";
-        public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
-        public const string UpdateProductRoute = $"{ProductRoute}/update";
-        public const string DeleteProdctRoute = $"{ProductRoute}/delete";
+  /*      public const string GetAllReviewsRoute = $"{ReviewRoute}/all";*/
+        public const string AddOrUpdateReviewRoute = $"{ReviewRoute}/create";
+        public const string DeleteReviewRoute = $"{ReviewRoute}/delete";
+        public const string GetReviewsByProductRoute = $"{ReviewRoute}/{{productId}}";
+        public const string GetProductRatingRoute = $"{ReviewRoute}/rating/{{productId}}";
+        public const string GetReviewCountRoute = $"{ReviewRoute}/reviewcount/{{productId}}";
 
-        #endregion*/
+        #endregion
 
         #region User
 
@@ -112,35 +112,5 @@
         #endregion
 
 
-
-
-        /*        #region OrderDetails
-
-                private const string 
-                private const string 
-
-                public const string 
-
-                #endregion
-
-
-                #region Product
-
-                private const string 
-                private const string 
-
-                public const string 
-
-                #endregion
-
-
-                #region User
-
-                private const string 
-                private const string 
-
-                public const string 
-
-                #endregion*/
     }
 }
