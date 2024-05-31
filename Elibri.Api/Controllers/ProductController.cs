@@ -52,6 +52,24 @@ namespace Elibri.API.Controllers
         }
 
         /// <summary>
+        /// Получение товара по названию
+        /// </summary>
+        /// <remarks>
+        /// Для получения товара по названию нужно ввести название товара
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetProductByNameRoute)]
+        public async Task<ActionResult<ProductDTO>> GetProductByName(string name)
+        {
+            var product = await _ProductService.GetByNameAsync(name);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+        /// <summary>
         /// Создание товара
         /// </summary>
         /// <remarks>

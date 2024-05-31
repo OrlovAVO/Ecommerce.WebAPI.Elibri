@@ -17,6 +17,7 @@ namespace Elibri.Core.Features.ProductServices
         Task<List<ProductDTO>> GetProductsByCategoryIdAsync(int categoryId);
         Task UpdateAsync(ProductDTO productDTO);
         Task DeleteAsync(int id);
+        Task<ProductDTO> GetByNameAsync(string name);
         /*        Task<List<ReviewDTO>> GetReviewsByProductIdAsync(int productId);
                 Task<ReviewDTO> AddReviewAsync(ReviewDTO reviewDTO);*/
     }

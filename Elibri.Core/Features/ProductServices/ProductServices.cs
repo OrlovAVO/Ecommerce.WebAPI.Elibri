@@ -69,6 +69,12 @@ namespace Elibri.Core.Features.ProductServices
             await _productRepository.DeleteAsync(existingProduct.ProductId);
         }
 
+        public async Task<ProductDTO> GetByNameAsync(string name)
+        {
+            var product = await _productRepository.GetByNameAsync(name);
+            return _mapper.Map<ProductDTO>(product);
+        }
+
         /*       public async Task<List<ReviewDTO>> GetReviewsByProductIdAsync(int productId) // Новое
                {
                    var reviews = await _reviewRepository.FindByConditionAsync(r => r.ProductId == productId);

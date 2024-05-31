@@ -24,5 +24,10 @@ namespace Elibri.Core.Repository.ProductRepo
                 .ToListAsync();
         }
 
+        public async Task<Product> GetByNameAsync(string name)
+        {
+            return await _cont.Products.FirstOrDefaultAsync(p => p.Name == name);
+        }
+
     }
 }
