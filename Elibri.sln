@@ -3,25 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.API", "E-commerce\Elibri.API.csproj", "{E3BE0D1B-4825-4AF1-BD75-F4B44E69F573}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E3C071BF-1D54-42B4-A2EB-B4F886AA8786} = {E3C071BF-1D54-42B4-A2EB-B4F886AA8786}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Context", "Context\Elibri.Context.csproj", "{0B797E66-A5A7-48E0-A7CA-BA362808C1E6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.DTOs", "Dtos\Elibri.DTOs.csproj", "{CC329D19-677D-45B1-A618-A7129B4CD6D2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Repositories", "Repository\Elibri.Repositories.csproj", "{FCA1AB22-7BB1-4458-8EAE-134B2EF3DABD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Models", "Models\Elibri.Models.csproj", "{E3C071BF-1D54-42B4-A2EB-B4F886AA8786}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Services", "Services\Elibri.Services.csproj", "{E7E9B999-65F7-4401-8F54-91EF3507DFDA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{003C4843-CE2B-4500-83B4-13A4658A52C6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Hosting", "Elibri.Hosting\Elibri.Hosting.csproj", "{7C99EC40-123D-4D8F-A279-3FAE0F17DEEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Core", "Elibri.Core\Elibri.Core.csproj", "{B9983AEB-1638-480D-9743-78096E4DC4CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.Authorization", "Elibri.Authorization\Elibri.Authorization.csproj", "{979DC69A-AEB1-4B17-BFDE-9BBAE60B3D42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elibri.EF", "Elibri.EF\Elibri.EF.csproj", "{7D9C5398-1D61-45D8-9CD2-5B46B9C6123A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elibri.Api", "Elibri.Api\Elibri.Api.csproj", "{94D64B09-6053-4CC0-84A4-348EB0F568A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,30 +24,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E3BE0D1B-4825-4AF1-BD75-F4B44E69F573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3BE0D1B-4825-4AF1-BD75-F4B44E69F573}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3BE0D1B-4825-4AF1-BD75-F4B44E69F573}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3BE0D1B-4825-4AF1-BD75-F4B44E69F573}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B797E66-A5A7-48E0-A7CA-BA362808C1E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B797E66-A5A7-48E0-A7CA-BA362808C1E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B797E66-A5A7-48E0-A7CA-BA362808C1E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B797E66-A5A7-48E0-A7CA-BA362808C1E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC329D19-677D-45B1-A618-A7129B4CD6D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC329D19-677D-45B1-A618-A7129B4CD6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC329D19-677D-45B1-A618-A7129B4CD6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC329D19-677D-45B1-A618-A7129B4CD6D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCA1AB22-7BB1-4458-8EAE-134B2EF3DABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA1AB22-7BB1-4458-8EAE-134B2EF3DABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA1AB22-7BB1-4458-8EAE-134B2EF3DABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCA1AB22-7BB1-4458-8EAE-134B2EF3DABD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3C071BF-1D54-42B4-A2EB-B4F886AA8786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3C071BF-1D54-42B4-A2EB-B4F886AA8786}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3C071BF-1D54-42B4-A2EB-B4F886AA8786}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3C071BF-1D54-42B4-A2EB-B4F886AA8786}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7E9B999-65F7-4401-8F54-91EF3507DFDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7E9B999-65F7-4401-8F54-91EF3507DFDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7E9B999-65F7-4401-8F54-91EF3507DFDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7E9B999-65F7-4401-8F54-91EF3507DFDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C99EC40-123D-4D8F-A279-3FAE0F17DEEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C99EC40-123D-4D8F-A279-3FAE0F17DEEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C99EC40-123D-4D8F-A279-3FAE0F17DEEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C99EC40-123D-4D8F-A279-3FAE0F17DEEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9983AEB-1638-480D-9743-78096E4DC4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9983AEB-1638-480D-9743-78096E4DC4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9983AEB-1638-480D-9743-78096E4DC4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9983AEB-1638-480D-9743-78096E4DC4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{979DC69A-AEB1-4B17-BFDE-9BBAE60B3D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{979DC69A-AEB1-4B17-BFDE-9BBAE60B3D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{979DC69A-AEB1-4B17-BFDE-9BBAE60B3D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{979DC69A-AEB1-4B17-BFDE-9BBAE60B3D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D9C5398-1D61-45D8-9CD2-5B46B9C6123A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D9C5398-1D61-45D8-9CD2-5B46B9C6123A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D9C5398-1D61-45D8-9CD2-5B46B9C6123A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D9C5398-1D61-45D8-9CD2-5B46B9C6123A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94D64B09-6053-4CC0-84A4-348EB0F568A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D64B09-6053-4CC0-84A4-348EB0F568A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D64B09-6053-4CC0-84A4-348EB0F568A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D64B09-6053-4CC0-84A4-348EB0F568A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

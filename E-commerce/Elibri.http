@@ -1,6 +1,0 @@
-@Elibri_HostAddress = http://localhost:8000
-
-GET {{Elibri_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
