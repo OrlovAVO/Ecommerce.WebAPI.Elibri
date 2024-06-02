@@ -131,7 +131,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteProductRoute)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _ProductService.DeleteAsync(id);

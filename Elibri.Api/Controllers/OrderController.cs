@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Elibri.Api.Controllers
 {
     [ApiController]
-
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -49,7 +49,7 @@ namespace Elibri.Api.Controllers
             var order = await _orderService.GetByIdAsync(id);
             if (order == null)
             {
-                return NotFound();
+                return NotFound("Пользователь не найден");
             }
             return Ok(order);
         }
@@ -58,42 +58,30 @@ namespace Elibri.Api.Controllers
         /// Создание заказа
         /// </summary>
         /// <remarks>
-        /// Для создания заказа нужно авторизироваться, ввести UserId и OrderId
+        /// Для создания заказа нужно авторизироваться
         /// </remarks>
         [HttpPost]
         [Route(Routes.CreateOrderRoute)]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<OrderDTO>> CreateOrder(OrderDTO orderDTO)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO orderDto)
         {
-            var createdOrder = await _orderService.CreateAsync(orderDTO);
-            return Ok(createdOrder);
-        }
+            var result = await _orderService.CreateOrderAsync(orderDto);
 
-        /// <summary>
-        /// Обновление заказа
-        /// </summary>
-        /// <remarks>
-        /// Для обновления заказа нужно авторизироваться, ввести UserId и OrderId
-        /// </remarks>
-        [HttpPut]
-        [Route(Routes.UpdateOrderRoute)]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> Update(int id, OrderDTO orderDTO)
-        {
-            var existingDto = await _orderService.GetByIdAsync(id);
-            if (existingDto == null)
+            if (result.IsSuccess)
             {
-                return NotFound();
+                return Ok(result.Data);
             }
-            await _orderService.UpdateAsync(orderDTO);
-            return Ok("Товар успешно обновлён.");
+            else
+            {
+                return BadRequest("Ошибка: " + result.ErrorMessage);
+            }
         }
 
         /// <summary>
-        /// Удаление заказа по UserId и OrderId
+        /// Удаление заказа
         /// </summary>
         /// <remarks>
-        /// Для удаления заказа нужно авторизироваться и ввести UserId и OrderId
+        /// Для удаления заказа нужно иметь права администратора
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteOrderRoute)]

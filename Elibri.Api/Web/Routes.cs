@@ -2,7 +2,7 @@
 {
     public class Routes
     {
-        private const string StartRouteSegment = "eb/v1";
+        private const string StartRouteSegment = "api/v1";
 
         #region Auth
 
@@ -27,6 +27,8 @@
         public const string CreateCartRoute = $"{CartRoute}/create";
         public const string UpdateCartByIdRoute = $"{CartRoute}/update";
         public const string DeleteCartByIdRoute = $"{CartRoute}/delete";
+        public const string AddProductToCartRoute = $"{CartRoute}/add";
+        public const string UpdateProductQuantityInCartRoute = $"{CartRoute}/updateProduct";
 
         #endregion
 
@@ -51,7 +53,7 @@
         public const string GetAllOrdersRoute = $"{OrderRoute}/all";
         public const string GetOrderByIdRoute = $"{OrderRoute}/{{orderId}}";
         public const string CreateOrderRoute = $"{OrderRoute}/create";
-        public const string UpdateOrderRoute = $"{OrderRoute}/update";
+/*        public const string UpdateOrderRoute = $"{OrderRoute}/update";*/
         public const string DeleteOrderRoute = $"{OrderRoute}/delete";
 
         #endregion

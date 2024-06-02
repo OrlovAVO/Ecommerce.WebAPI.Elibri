@@ -28,7 +28,7 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = c.CategoryId,
                 Name = c.Name,
-                Description = c.Description
+
             }).ToList();
         }
 
@@ -40,7 +40,7 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = category.CategoryId,
                 Name = category.Name,
-                Description = category.Description
+
             };
         }
 
@@ -49,14 +49,14 @@ namespace Elibri.Core.Features.CategoryServices
             var category = new Category
             {
                 Name = categoryDTO.Name,
-                Description = categoryDTO.Description
+
             };
             var createdCategory = await _categoryRepository.CreateAsync(category);
             return new CategoryDTO
             {
                 CategoryId = createdCategory.CategoryId,
                 Name = createdCategory.Name,
-                Description = createdCategory.Description
+
             };
         }
 
@@ -66,7 +66,7 @@ namespace Elibri.Core.Features.CategoryServices
             if (category == null) return;
 
             category.Name = categoryDTO.Name;
-            category.Description = categoryDTO.Description;
+
 
             await _categoryRepository.UpdateAsync(category);
         }

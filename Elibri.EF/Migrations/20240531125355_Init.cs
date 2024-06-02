@@ -177,7 +177,8 @@ namespace Elibri.EF.Migrations
                 name: "Carts",
                 columns: table => new
                 {
-                    CartId = table.Column<string>(type: "text", nullable: false),
+                    CartId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "varchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -233,6 +234,27 @@ namespace Elibri.EF.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItem",
+                columns: table => new
+                {
+                    CartItemId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CartId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItem", x => x.CartItemId);
+                    table.ForeignKey(
+                        name: "FK_CartItem_Carts_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Carts",
+                        principalColumn: "CartId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -336,6 +358,11 @@ namespace Elibri.EF.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartItem_CartId",
+                table: "CartItem",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Carts_UserId",
                 table: "Carts",
                 column: "UserId",
@@ -396,7 +423,7 @@ namespace Elibri.EF.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Carts");
+                name: "CartItem");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");
@@ -406,6 +433,9 @@ namespace Elibri.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "Orders");

@@ -11,5 +11,6 @@ namespace Elibri.Core.Repository.OrderDetailsRepo
 {
     public interface IOrderDetailsRepository : IGenericRepository<OrderDetail>
     {
+        IQueryable<OrderDetail> GetAll();
     }
 }

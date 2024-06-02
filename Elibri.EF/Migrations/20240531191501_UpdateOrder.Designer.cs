@@ -3,6 +3,7 @@ using System;
 using Elibri.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Elibri.EF.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240531191501_UpdateOrder")]
+    partial class UpdateOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,8 +66,6 @@ namespace Elibri.EF.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("CartItems");
                 });
 
@@ -76,7 +77,7 @@ namespace Elibri.EF.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
-                    b.Property<string>("Image")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -101,10 +102,6 @@ namespace Elibri.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -113,12 +110,8 @@ namespace Elibri.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -142,6 +135,9 @@ namespace Elibri.EF.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
@@ -150,9 +146,6 @@ namespace Elibri.EF.Migrations
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric");
 
                     b.HasKey("OrderDetailId");
 
@@ -456,15 +449,7 @@ namespace Elibri.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Elibri.EF.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Cart");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Elibri.EF.Models.Order", b =>

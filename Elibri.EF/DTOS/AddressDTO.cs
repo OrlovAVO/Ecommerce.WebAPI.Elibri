@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace Elibri.EF.DTOS
 {
-    public class CartDTO
+    public class AddressDTO
     {
-        [Key]
         [Required]
-        public int CartId { get; set; }
-
+        public string Street { get; set; }
         [Required]
-        public string UserId { get; set; }
+        public string City { get; set; }
+        [Required]
+        public string State { get; set; }
+        [Required]
+        public string PostalCode { get; set; }
 
-        public List<CartItemDTO> CartItems { get; set; } = new List<CartItemDTO>();
     }
 }

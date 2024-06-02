@@ -27,14 +27,14 @@ namespace Elibri.Api.Controllers
         [HttpGet]
         [Route(Routes.GetAllOrdersDetailsRoute)]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<List<OrderDetailDTO>>> GetAllOrderDetailss()
+        public async Task<ActionResult<List<OrderDetailDTO>>> GetAllOrderDetails()
         {
-            var OrderDetailss = await _OrderDetailsService.GetAllAsync();
-            if (OrderDetailss == null)
+            var orderDetails = await _OrderDetailsService.GetAllAsync();
+            if (orderDetails == null || orderDetails.Count == 0)
             {
                 return Ok(new List<OrderDetailDTO>());
             }
-            return Ok(OrderDetailss);
+            return Ok(orderDetails);
         }
 
         /// <summary>
@@ -46,31 +46,16 @@ namespace Elibri.Api.Controllers
         [HttpGet]
         [Route(Routes.GetOrderDetailByIdRoute)]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<OrderDetailDTO>> GetOrderDetailsById(int id)
+        public async Task<ActionResult<List<OrderDetailDTO>>> GetOrderDetailsByUserId(string userId)
         {
-            var OrderDetails = await _OrderDetailsService.GetByIdAsync(id);
-            if (OrderDetails == null)
+            var orderDetails = await _OrderDetailsService.GetOrderDetailsByUserIdAsync(userId);
+            if (orderDetails == null || orderDetails.Count == 0)
             {
                 return NotFound();
             }
-            return Ok(OrderDetails);
+            return Ok(orderDetails);
         }
 
-        /// <summary>
-        /// Создание деталей заказа
-        /// </summary>
-        /// <remarks>
-        /// Для создания деталей заказа нужно авторизироваться, ввести UserId и OrderDetailId
-        /// </remarks>
-        [HttpPost]
-        [Route(Routes.CreateOrderDetailRoute)]
-        [Authorize(Roles = "User")]
-        public async Task<ActionResult<OrderDetailDTO>> CreateOrderDetails(OrderDetailDTO OrderDetailsDTO)
-        {
-            var createdOrderDetails = await _OrderDetailsService.CreateAsync(OrderDetailsDTO);
-
-            return Ok(createdOrderDetails);
-        }
 
         /// <summary>
         /// Обновление деталей заказа
@@ -81,15 +66,16 @@ namespace Elibri.Api.Controllers
         [HttpPut]
         [Route(Routes.UpdateOrderDetailRoute)]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Update(int id, OrderDetailDTO OrderDetailsDTO)
+        public async Task<IActionResult> Update(int id, OrderDetailDTO orderDetailsDTO)
         {
             var existingDto = await _OrderDetailsService.GetByIdAsync(id);
             if (existingDto == null)
             {
                 return NotFound();
             }
-            await _OrderDetailsService.UpdateAsync(OrderDetailsDTO);
-            return Ok("Updated Successfuly");
+            orderDetailsDTO.OrderDetailId = id;
+            await _OrderDetailsService.UpdateAsync(orderDetailsDTO);
+            return Ok("Updated Successfully");
         }
 
         /// <summary>
@@ -104,7 +90,7 @@ namespace Elibri.Api.Controllers
         public async Task<IActionResult> DeleteOrderDetails(int id)
         {
             await _OrderDetailsService.DeleteAsync(id);
-            return Ok("Deleted Successfuly");
+            return Ok("Deleted Successfully");
         }
     }
 

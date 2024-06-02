@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elibri.EF.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Elibri.EF.DTOS
     {
         public int CategoryId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Image { get; set; }
 
     }
 }

@@ -1,16 +1,12 @@
-﻿using Elibri.EF.DTOS;
+﻿using Elibri.EF.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-
 namespace Elibri.EF.Models
 {
-
-    public class Context : IdentityDbContext
+    public class Context : IdentityDbContext<User>
     {
-
-
         private readonly IConfiguration _configuration;
 
         public Context(IConfiguration configuration)
@@ -23,6 +19,7 @@ namespace Elibri.EF.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,17 +29,15 @@ namespace Elibri.EF.Models
             base.OnConfiguring(optionsBuilder);
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Order>()
-           .HasOne(o => o.User)
-           .WithMany(u => u.Orders)
-           .HasForeignKey(o => o.UserId)
-           .IsRequired();
-
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId)
+                .IsRequired();
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Order)
@@ -65,12 +60,14 @@ namespace Elibri.EF.Models
                 .HasForeignKey<Cart>(c => c.UserId)
                 .IsRequired(false);
 
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.CartId);
+
             modelBuilder.Entity<User>()
-           .Property(u => u.Id)
-           .HasColumnType("varchar(450)");
-
+                .Property(u => u.Id)
+                .HasColumnType("varchar(450)");
         }
-
-
     }
 }

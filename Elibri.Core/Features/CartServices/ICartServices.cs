@@ -11,5 +11,7 @@ namespace Elibri.Core.Features.CartServices
         Task<CartDTO> CreateAsync(CartDTO cartDTO);
         Task UpdateAsync(CartDTO cartDTO);
         Task DeleteAsync(int id);
+        Task<ServiceResult> AddProductToCartAsync(int cartId, int productId, int quantity);
+        Task<ServiceResult> UpdateProductQuantityInCartAsync(int cartId, int productId, int quantity);
     }
 }

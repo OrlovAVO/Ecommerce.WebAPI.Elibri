@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.OrderDetailsServices
 {
-    public interface IOrderDetailService : IGenericService<OrderDetailDTO> { }
+    public interface IOrderDetailService : IGenericService<OrderDetailDTO> 
+    {
+        Task<List<OrderDetailDTO>> GetOrderDetailsByUserIdAsync(string userId);
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elibri.EF.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace Elibri.EF.Models
 {
-    public class OrderDetail
+    public class CartItem
     {
         [Key]
-        public int OrderDetailId { get; set; }
-        public int OrderId { get; set; }
+        public int CartItemId { get; set; }
+        [Required]
         public int ProductId { get; set; }
-        public int StockQuantity { get; set; }
-        public decimal TotalAmount { get; set; }
-        public Order Order { get; set; }
-        public Product Product { get; set; }
-    }
+        [Required]
+        public int Quantity { get; set; }
 
+
+        public Product Product { get; set; }
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
+    }
 }
