@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Elibri.EF.DTOS;
 using Elibri.EF.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Elibri.Core.Features.Mapper
 {
@@ -8,36 +10,27 @@ namespace Elibri.Core.Features.Mapper
     {
         public MapperProfile()
         {
-
             CreateMap<User, UserDTO>().ReverseMap();
-
-
             CreateMap<Product, ProductDTO>().ReverseMap();
-
-
             CreateMap<Category, CategoryDTO>().ReverseMap();
 
-
             CreateMap<Order, OrderDTO>()
-                .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.OrderDetails))
-                .ReverseMap()
-                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.CartItems));
-
-
-            CreateMap<OrderDetail, OrderDetailDTO>()
+                .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.OrderDetails.Select(od => new CartItemDTO
+                {
+                    ProductId = od.ProductId,
+                    Quantity = od.StockQuantity
+                }).ToList()))
                 .ReverseMap();
 
+            CreateMap<OrderDetail, OrderDetailDTO>()
+                .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.Order.OrderDetails.Select(od => new CartItemDTO
+                {
+                    ProductId = od.ProductId,
+                    Quantity = od.StockQuantity
+                }).ToList()))
+                .ReverseMap();
 
             CreateMap<Cart, CartDTO>().ReverseMap();
-
-
-            CreateMap<CartItemDTO, OrderDetailDTO>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
-                .ForMember(dest => dest.StockQuantity, opt => opt.MapFrom(src => src.Quantity))
-                .ForMember(dest => dest.OrderId, opt => opt.Ignore())
-                .ForMember(dest => dest.OrderDetailId, opt => opt.Ignore());
-
-
             CreateMap<Review, ReviewDTO>().ReverseMap();
         }
     }

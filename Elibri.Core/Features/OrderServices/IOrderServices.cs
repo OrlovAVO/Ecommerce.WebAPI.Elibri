@@ -8,7 +8,7 @@ namespace Elibri.Core.Features.OrderServices
     {
         Task<List<OrderDTO>> GetAllAsync();
         Task<OrderDTO> GetByIdAsync(int id);
-        Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO orderDTO);
+        Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDto);
         Task DeleteAsync(int id);
     }
 }

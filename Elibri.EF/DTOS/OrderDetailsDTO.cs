@@ -10,11 +10,7 @@ namespace Elibri.EF.DTOS
     {
         public int OrderDetailId { get; set; }
         public int OrderId { get; set; }
-        public int ProductId { get; set; }
-        public int StockQuantity { get; set; }
+        public List<CartItemDTO> CartItems { get; set; }
         public decimal TotalAmount { get; set; }
-
-
-
     }
 }

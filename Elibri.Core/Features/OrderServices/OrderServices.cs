@@ -1,10 +1,10 @@
-﻿using Elibri.EF.DTOS;
+﻿using AutoMapper;
+using Elibri.EF.DTOS;
 using Elibri.EF.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,73 +14,43 @@ namespace Elibri.Core.Features.OrderServices
     {
         private readonly Context _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public OrderService(Context context, IHttpContextAccessor httpContextAccessor)
+        public OrderService(Context context, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
         public async Task<List<OrderDTO>> GetAllAsync()
         {
-            return await _context.Orders
+            var orders = await _context.Orders
                 .Include(order => order.OrderDetails)
                 .ThenInclude(od => od.Product)
-                .Select(order => new OrderDTO
-                {
-                    OrderId = order.OrderId,
-                    UserId = order.UserId,
-                    FirstName = order.FirstName,
-                    LastName = order.LastName,
-                    Address = order.Address,
-                    PhoneNumber = order.PhoneNumber,
-                    CardNumber = order.CardNumber,
-                    CartItems = order.OrderDetails.Select(od => new CartItemDTO
-                    {
-                        ProductId = od.ProductId,
-                        Quantity = od.StockQuantity
-                    }).ToList()
-                }).ToListAsync();
+                .ToListAsync();
+
+            return _mapper.Map<List<OrderDTO>>(orders);
         }
 
         public async Task<OrderDTO> GetByIdAsync(int id)
         {
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
-            if (order == null) return null;
-
-            return new OrderDTO
-            {
-                OrderId = order.OrderId,
-                UserId = order.UserId,
-                FirstName = order.FirstName,
-                LastName = order.LastName,
-                Address = order.Address,
-                PhoneNumber = order.PhoneNumber,
-                CardNumber = order.CardNumber,
-                CartItems = order.OrderDetails.Select(od => new CartItemDTO
-                {
-                    ProductId = od.ProductId,
-                    Quantity = od.StockQuantity
-                }).ToList()
-            };
+            return _mapper.Map<OrderDTO>(order);
         }
 
         public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO orderDto)
         {
-            // Получаем UserId из токена
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // Проверяем, получили ли мы UserId
             if (userId == null)
             {
                 return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = "User not authenticated." };
             }
-
-            // Инициализируем общую сумму заказа
-            decimal totalAmount = 0;
 
             // Создаем новый заказ
             var order = new Order
@@ -95,7 +65,8 @@ namespace Elibri.Core.Features.OrderServices
             };
 
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+
+            decimal totalAmount = 0;
 
             foreach (var cartItem in orderDto.CartItems)
             {
@@ -117,9 +88,10 @@ namespace Elibri.Core.Features.OrderServices
 
                 totalAmount += itemTotal;
 
+                // Создаем OrderDetail для текущего CartItemDTO
                 var orderDetail = new OrderDetail
                 {
-                    OrderId = order.OrderId,
+                    Order = order,
                     ProductId = cartItem.ProductId,
                     StockQuantity = cartItem.Quantity,
                     TotalAmount = itemTotal
@@ -128,28 +100,12 @@ namespace Elibri.Core.Features.OrderServices
                 _context.OrderDetails.Add(orderDetail);
             }
 
+            order.TotalAmount = totalAmount;
+
             await _context.SaveChangesAsync();
 
-            var createdOrderDto = new OrderDTO
-            {
-                OrderId = order.OrderId,
-                UserId = userId,
-                FirstName = order.FirstName,
-                LastName = order.LastName,
-                Address = order.Address,
-                PhoneNumber = order.PhoneNumber,
-                CardNumber = order.CardNumber,
-                CartItems = order.OrderDetails.Select(od => new CartItemDTO
-                {
-                    ProductId = od.ProductId,
-                    Quantity = od.StockQuantity
-                }).ToList()
-            };
-
-            return new ServiceResult<OrderDTO> { IsSuccess = true, Data = createdOrderDto };
+            return new ServiceResult<OrderDTO> { IsSuccess = true, Data = _mapper.Map<OrderDTO>(order) };
         }
-
-
 
         public async Task DeleteAsync(int id)
         {

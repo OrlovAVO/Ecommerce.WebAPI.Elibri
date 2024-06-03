@@ -63,18 +63,14 @@ namespace Elibri.Api.Controllers
         [HttpPost]
         [Route(Routes.CreateOrderRoute)]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO orderDto)
+        public async Task<ActionResult<ServiceResult<OrderDTO>>> CreateOrder(CreateOrderDTO createOrderDto)
         {
-            var result = await _orderService.CreateOrderAsync(orderDto);
-
-            if (result.IsSuccess)
+            var result = await _orderService.CreateOrderAsync(createOrderDto);
+            if (!result.IsSuccess)
             {
-                return Ok(result.Data);
+                return BadRequest(result.ErrorMessage);
             }
-            else
-            {
-                return BadRequest("Ошибка: " + result.ErrorMessage);
-            }
+            return Ok(result);
         }
 
         /// <summary>

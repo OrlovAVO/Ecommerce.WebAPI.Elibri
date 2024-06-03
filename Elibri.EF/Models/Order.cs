@@ -1,10 +1,6 @@
-﻿using Elibri.EF.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elibri.EF.Models
 {
@@ -21,5 +17,11 @@ namespace Elibri.EF.Models
         public string PhoneNumber { get; set; }
         public string CardNumber { get; set; }
         public User User { get; set; }
+        public decimal TotalAmount { get; set; }
+
+        public Order()
+        {
+            OrderDetails = new List<OrderDetail>();
+        }
     }
 }

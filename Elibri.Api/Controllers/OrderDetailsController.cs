@@ -30,11 +30,20 @@ namespace Elibri.Api.Controllers
         public async Task<ActionResult<List<OrderDetailDTO>>> GetAllOrderDetails()
         {
             var orderDetails = await _OrderDetailsService.GetAllAsync();
-            if (orderDetails == null || orderDetails.Count == 0)
+
+            var orderDetailDTOs = orderDetails.Select(od => new OrderDetailDTO
             {
-                return Ok(new List<OrderDetailDTO>());
-            }
-            return Ok(orderDetails);
+                OrderDetailId = od.OrderDetailId,
+                OrderId = od.OrderId,
+                CartItems = od.CartItems.Select(ci => new CartItemDTO
+                {
+                    ProductId = ci.ProductId,
+                    Quantity = ci.Quantity
+                }).ToList(),
+                TotalAmount = od.TotalAmount
+            }).ToList();
+
+            return Ok(orderDetailDTOs);
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace Elibri.API.Controllers
         [Route(Routes.AdminRegistrationRoute)]
         [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<IActionResult> RegisterAdmin(RegisterDto model)
         {
             return await _authService.RegisterAdmin(model);

@@ -46,17 +46,23 @@ namespace Elibri.Core.Features.CategoryServices
 
         public async Task<CategoryDTO> CreateAsync(CategoryDTO categoryDTO)
         {
+            if (string.IsNullOrEmpty(categoryDTO.Image))
+            {
+                throw new ArgumentException("Необходимо указать изображение для категории.");
+            }
+
             var category = new Category
             {
                 Name = categoryDTO.Name,
-
+                Image = categoryDTO.Image  // Установка значения для свойства Image
             };
+
             var createdCategory = await _categoryRepository.CreateAsync(category);
             return new CategoryDTO
             {
                 CategoryId = createdCategory.CategoryId,
                 Name = createdCategory.Name,
-
+                Image = createdCategory.Image  // Возможно, вы захотите возвращать ссылку на изображение
             };
         }
 

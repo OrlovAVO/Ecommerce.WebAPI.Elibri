@@ -3,12 +3,12 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "elibri",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:8000"
+      "applicationUrl": "http://localhost:3000"
     }
   }
 }
