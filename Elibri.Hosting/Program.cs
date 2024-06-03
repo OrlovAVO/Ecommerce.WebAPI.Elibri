@@ -44,9 +44,14 @@ namespace Elibri.Hosting
             // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
+
+                // Enable Swagger for Development environment or for Swagger profile
+                if (app.Environment.EnvironmentName == "Development" || app.Environment.EnvironmentName == "swagger")
+                {
+                    app.UseSwagger();
+                    app.UseSwaggerUI();
+                }
             }
 
             app.UseCors("AllowSpecificOrigin");
