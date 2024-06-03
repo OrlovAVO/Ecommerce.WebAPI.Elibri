@@ -54,7 +54,7 @@ namespace Elibri.Core.Features.CategoryServices
             var category = new Category
             {
                 Name = categoryDTO.Name,
-                Image = categoryDTO.Image  // Установка значения для свойства Image
+                Image = categoryDTO.Image  
             };
 
             var createdCategory = await _categoryRepository.CreateAsync(category);
@@ -62,7 +62,7 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = createdCategory.CategoryId,
                 Name = createdCategory.Name,
-                Image = createdCategory.Image  // Возможно, вы захотите возвращать ссылку на изображение
+                Image = createdCategory.Image  
             };
         }
 

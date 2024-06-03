@@ -49,7 +49,7 @@ namespace Elibri.Core.Features.OrderDetailsServices
             foreach (var od in orderDetails)
             {
                 var cartItems = await _context.CartItems
-                    .Where(ci => ci.CartId == od.OrderId) // Убедимся, что CartId используется правильно
+                    .Where(ci => ci.CartId == od.OrderId) 
                     .ToListAsync();
 
                 var cartItemDTOs = cartItems.Select(ci => new CartItemDTO

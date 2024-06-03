@@ -35,12 +35,46 @@ namespace Elibri.Core.Features.OrderServices
 
         public async Task<OrderDTO> GetByIdAsync(int id)
         {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return null; 
+            }
+
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
-                .FirstOrDefaultAsync(o => o.OrderId == id);
+                .FirstOrDefaultAsync(o => o.OrderId == id && o.UserId == userId);
+
+            if (order == null)
+            {
+                return null; 
+            }
+
+            order.TotalAmount = await _context.OrderDetails
+                .Where(od => od.OrderId == order.OrderId)
+                .SumAsync(od => od.TotalAmount);
 
             return _mapper.Map<OrderDTO>(order);
+        }
+
+        public async Task<List<OrderDTO>> GetOrdersByUserIdAsync(string userId)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
+
+            foreach (var order in orders)
+            {
+                order.TotalAmount = await _context.OrderDetails
+                    .Where(od => od.OrderId == order.OrderId)
+                    .SumAsync(od => od.TotalAmount);
+            }
+
+            return _mapper.Map<List<OrderDTO>>(orders);
         }
 
         public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO orderDto)
@@ -52,7 +86,6 @@ namespace Elibri.Core.Features.OrderServices
                 return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = "User not authenticated." };
             }
 
-            // Создаем новый заказ
             var order = new Order
             {
                 UserId = userId,
@@ -73,12 +106,12 @@ namespace Elibri.Core.Features.OrderServices
                 var product = await _context.Products.FindAsync(cartItem.ProductId);
                 if (product == null)
                 {
-                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Product with ID {cartItem.ProductId} not found." };
+                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Товар с ID:{cartItem.ProductId} не найден." };
                 }
 
                 if (product.StockQuantity < cartItem.Quantity)
                 {
-                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Not enough stock for product with ID {cartItem.ProductId}." };
+                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Недостаточно товара на складе с ID:{cartItem.ProductId}." };
                 }
 
                 product.StockQuantity -= cartItem.Quantity;
@@ -88,7 +121,6 @@ namespace Elibri.Core.Features.OrderServices
 
                 totalAmount += itemTotal;
 
-                // Создаем OrderDetail для текущего CartItemDTO
                 var orderDetail = new OrderDetail
                 {
                     Order = order,

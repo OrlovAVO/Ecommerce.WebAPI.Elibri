@@ -38,7 +38,7 @@
         private const string CategoriesRoute = $"{StartRouteSegment}/{CategoriesRouteSegment}";
 
         public const string GetCategoriesRoute = $"{CategoriesRoute}/all";
-        public const string GetCategoryByIdRoute = $"{CategoriesRoute}/{{categoryId}}";
+        public const string GetCategoryByIdRoute = $"{CategoriesRoute}/categoryId";
         public const string CreateCategoryRoute = $"{CategoriesRoute}/create";
         public const string UpdateCategoryRoute = $"{CategoriesRoute}/update";
         public const string DeleteCategoryRoute = $"{CategoriesRoute}/delete";
@@ -51,7 +51,7 @@
         private const string OrderRoute = $"{StartRouteSegment}/{OrderRouteSegment}";
 
         public const string GetAllOrdersRoute = $"{OrderRoute}/all";
-        public const string GetOrderByIdRoute = $"{OrderRoute}/{{orderId}}";
+        public const string GetOrderByIdRoute = $"{OrderRoute}/userOrders";
         public const string CreateOrderRoute = $"{OrderRoute}/create";
 /*        public const string UpdateOrderRoute = $"{OrderRoute}/update";*/
         public const string DeleteOrderRoute = $"{OrderRoute}/delete";
@@ -77,12 +77,12 @@
         private const string ProductRoute = $"{StartRouteSegment}/{ProductRouteSegment}";
 
         public const string GetAllProductsRoute = $"{ProductRoute}/all";
-        public const string GetProductByIdRoute = $"{ProductRoute}/{{productId}}";
+        public const string GetProductByIdRoute = $"{ProductRoute}/productId";
         public const string CreateProductRoute = $"{ProductRoute}/create";
-        public const string GetProductByCategoryIdRoute = $"{ProductRoute}/{{categoryId}}";
+        public const string GetProductByCategoryIdRoute = $"{ProductRoute}/categoryId";
         public const string UpdateProductRoute = $"{ProductRoute}/update";
         public const string DeleteProductRoute = $"{ProductRoute}/delete";
-        public const string GetProductByNameRoute = $"{ProductRoute}/product/{{name}}";
+        public const string GetProductByNameRoute = $"{ProductRoute}/product/name";
 
         #endregion
 

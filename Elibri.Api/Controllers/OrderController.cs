@@ -24,11 +24,11 @@ namespace Elibri.Api.Controllers
         /// Получение всех заказов
         /// </summary>
         /// <remarks>
-        /// Для получения заказов нужно авторизироваться
+        /// Для получения заказов нужно иметь права администратора
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetAllOrdersRoute)]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<OrderDTO>>> GetAllOrders()
         {
             var orders = await _orderService.GetAllAsync();
@@ -36,22 +36,29 @@ namespace Elibri.Api.Controllers
         }
 
         /// <summary>
-        /// Получение корзины по UserId и OrderId
+        /// Получение заказов авторизованного пользователя 
         /// </summary>
         /// <remarks>
-        /// Для получения заказов нужно авторизироваться, ввести UserId и OrderId
+        /// Для получения заказов нужно авторизироваться
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetOrderByIdRoute)]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<OrderDTO>> GetOrderById(int id)
+        public async Task<ActionResult<List<OrderDTO>>> GetOrderById()
         {
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
             {
-                return NotFound("Пользователь не найден");
+                return BadRequest("User not found");
             }
-            return Ok(order);
+
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound("User order not found");
+            }
+
+            return Ok(orders);
         }
 
         /// <summary>

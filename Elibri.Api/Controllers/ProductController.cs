@@ -70,22 +70,6 @@ namespace Elibri.API.Controllers
         }
 
         /// <summary>
-        /// Создание товара
-        /// </summary>
-        /// <remarks>
-        /// Для создания товара нужны права администратора
-        /// </remarks>
-        [HttpPost]
-        [Route(Routes.CreateProductRoute)]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO ProductDTO)
-        {
-            var createdProduct = await _ProductService.CreateAsync(ProductDTO);
-
-            return Ok(createdProduct);
-        }
-
-        /// <summary>
         /// Получение товара по categoryId
         /// </summary>
         /// <remarks>
@@ -102,6 +86,23 @@ namespace Elibri.API.Controllers
             }
             return Ok(products);
         }
+
+        /// <summary>
+        /// Создание товара
+        /// </summary>
+        /// <remarks>
+        /// Для создания товара нужны права администратора
+        /// </remarks>
+        [HttpPost]
+        [Route(Routes.CreateProductRoute)]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO ProductDTO)
+        {
+            var createdProduct = await _ProductService.CreateAsync(ProductDTO);
+
+            return Ok(createdProduct);
+        }
+
 
         /// <summary>
         /// Обновление товара 
