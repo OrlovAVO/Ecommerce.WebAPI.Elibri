@@ -107,7 +107,12 @@ namespace Elibri.Authorization.Services.AuthServices
         public async Task<IActionResult> Login(LoginDto model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            if (user == null)
+            {
+                return new BadRequestObjectResult("Пользователь с таким именем не существует.");
+            }
+
+            if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 return new BadRequestObjectResult("Неверные данные для входа");
             }
@@ -115,12 +120,12 @@ namespace Elibri.Authorization.Services.AuthServices
             var roles = await _userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email)
+    };
 
             foreach (var role in roles)
             {
