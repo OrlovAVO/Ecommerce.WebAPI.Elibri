@@ -1,9 +1,6 @@
 ﻿using Elibri.EF.Models;
 using Elibri.Core.Repository.GenericRepo;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Elibri.Core.Repository.ProductRepo
@@ -12,6 +9,6 @@ namespace Elibri.Core.Repository.ProductRepo
     {
         Task<List<Product>> GetProductsByCategoryIdAsync(int categoryId);
         Task<Product> GetByNameAsync(string name);
-
+        Task<List<Product>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm);
     }
 }

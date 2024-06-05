@@ -2,22 +2,19 @@
 using Elibri.EF.Models;
 using Elibri.Core.Repository.ProductRepo;
 using Elibri.EF.DTOS;
-using Elibri.Core.Repository.GenericRepo;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.ProductServices
 {
-
-
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        /*        private readonly IGenericRepository<Review> _reviewRepository;*/
         private readonly IMapper _mapper;
 
         public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
-            /*            _reviewRepository = reviewRepository;*/
             _mapper = mapper;
         }
 
@@ -75,18 +72,10 @@ namespace Elibri.Core.Features.ProductServices
             return _mapper.Map<ProductDTO>(product);
         }
 
-        /*       public async Task<List<ReviewDTO>> GetReviewsByProductIdAsync(int productId) // Новое
-               {
-                   var reviews = await _reviewRepository.FindByConditionAsync(r => r.ProductId == productId);
-                   return _mapper.Map<List<ReviewDTO>>(reviews);
-               }
-
-               public async Task<ReviewDTO> AddReviewAsync(ReviewDTO reviewDTO) // Новое
-               {
-                   var review = _mapper.Map<Review>(reviewDTO);
-                   review = await _reviewRepository.CreateAsync(review);
-                   return _mapper.Map<ReviewDTO>(review);
-               }*/
+        public async Task<List<ProductDTO>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm)
+        {
+            var products = await _productRepository.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm);
+            return _mapper.Map<List<ProductDTO>>(products);
+        }
     }
-
 }

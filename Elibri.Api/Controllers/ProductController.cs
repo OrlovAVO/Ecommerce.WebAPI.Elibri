@@ -88,6 +88,34 @@ namespace Elibri.API.Controllers
         }
 
         /// <summary>
+        /// Фильтрация товаров
+        /// </summary>
+        /// <remarks>
+        /// Фильтрация товаров по максимальному времени доставки, сортировке по цене и поиску по названию
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetFilteredProductsRoute)]
+        public async Task<ActionResult<List<ProductDTO>>> FilterProducts(
+            [FromQuery] int? maxDeliveryDays,
+            [FromQuery] bool sortByPriceDescending,
+            [FromQuery] string searchTerm)
+        {
+            if (!maxDeliveryDays.HasValue && string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Поисковый запрос не может быть пустым.");
+            }
+
+            var products = await _ProductService.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm);
+
+            if (products == null || products.Count == 0)
+            {
+                return NotFound("К сожалению, данного товара нет в нашем магазине.");
+            }
+
+            return Ok(products);
+        }
+
+        /// <summary>
         /// Создание товара
         /// </summary>
         /// <remarks>
