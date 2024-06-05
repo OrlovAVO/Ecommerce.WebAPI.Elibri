@@ -14,6 +14,8 @@ namespace Elibri.EF.DTOS
         public string PhoneNumber { get; set; }
         public string CardNumber { get; set; }*/
         public decimal TotalPrice { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime DeliveryDate { get; set; } // Новое свойство для даты доставки
     }
 
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -13,14 +14,14 @@ namespace Elibri.Core.Features.OrderServices
     public class OrderService : IOrderService
     {
         private readonly Context _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderService(Context context, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public OrderService(Context context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<OrderDTO>> GetAllAsync()
@@ -47,34 +48,6 @@ namespace Elibri.Core.Features.OrderServices
             }).ToList();
         }
 
-        public async Task<List<OrderDTO>> GetOrdersByUserIdAsync(string userId)
-        {
-            var orders = await _context.Orders
-                .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Product)
-                .Where(o => o.UserId == userId)
-                .ToListAsync();
-
-            var orderDTOs = orders.Select(order =>
-            {
-                var orderDto = _mapper.Map<OrderDTO>(order);
-
-                foreach (var cartItem in orderDto.CartItems)
-                {
-                    var product = order.OrderDetails.FirstOrDefault(od => od.ProductId == cartItem.ProductId)?.Product;
-                    if (product != null)
-                    {
-                        cartItem.Image = product.Image;
-                    }
-                }
-
-                return orderDto;
-            }).ToList();
-
-            return orderDTOs;
-        }
-
-
         public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -98,6 +71,7 @@ namespace Elibri.Core.Features.OrderServices
             _context.Orders.Add(order);
 
             decimal totalAmount = 0;
+            DateTime maxDeliveryDate = DateTime.UtcNow;
 
             foreach (var cartItem in createOrderDto.CartItems)
             {
@@ -128,9 +102,17 @@ namespace Elibri.Core.Features.OrderServices
                 };
 
                 _context.OrderDetails.Add(orderDetail);
+
+                // Вычисление даты доставки для текущего товара
+                var deliveryDate = DateTime.UtcNow.AddDays(product.DeliveryDays);
+                if (deliveryDate > maxDeliveryDate)
+                {
+                    maxDeliveryDate = deliveryDate;
+                }
             }
 
             order.TotalPrice = totalAmount;
+            order.DeliveryDate = maxDeliveryDate; // Установка даты доставки для заказа
 
             await _context.SaveChangesAsync();
 
@@ -139,14 +121,41 @@ namespace Elibri.Core.Features.OrderServices
             return new ServiceResult<OrderDTO> { IsSuccess = true, Data = orderDTO };
         }
 
-
         public async Task DeleteAsync(int id)
         {
             var order = await _context.Orders.FindAsync(id);
-            if (order == null) return;
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+        }
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+        public async Task<List<OrderDTO>> GetOrdersByUserIdAsync(string userId)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
+
+            var orderDTOs = orders.Select(order =>
+            {
+                var orderDto = _mapper.Map<OrderDTO>(order);
+
+                foreach (var cartItem in orderDto.CartItems)
+                {
+                    var product = order.OrderDetails.FirstOrDefault(od => od.ProductId == cartItem.ProductId)?.Product;
+                    if (product != null)
+                    {
+                        cartItem.Image = product.Image;
+                    }
+                }
+
+                return orderDto;
+            }).ToList();
+
+            return orderDTOs;
         }
     }
 
@@ -157,3 +166,5 @@ namespace Elibri.Core.Features.OrderServices
         public T Data { get; set; }
     }
 }
+
+

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Elibri.EF.DTOS;
 using Elibri.EF.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Elibri.Core.Features.Mapper

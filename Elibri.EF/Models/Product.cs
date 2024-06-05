@@ -37,5 +37,8 @@ namespace Elibri.EF.Models
 
         public ICollection<Review> Reviews { get; set; }
 
+        [Required]
+        public int DeliveryDays { get; set; }
+
     }
 }
