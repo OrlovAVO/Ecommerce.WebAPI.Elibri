@@ -14,7 +14,7 @@ namespace Elibri.EF.Models
         public int OrderId { get; set; }
         public int ProductId { get; set; }
         public int StockQuantity { get; set; }
-        public decimal TotalAmount { get; set; }
+        public decimal TotalPrice { get; set; }
         public Order Order { get; set; }
         public Product Product { get; set; }
     }

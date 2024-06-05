@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Elibri.EF.DTOS
 {
-    public class CartItemDTO
+    public class CreateCartItemDTO
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public string Image { get; set; }
-
     }
 }

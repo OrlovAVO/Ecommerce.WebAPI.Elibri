@@ -4,7 +4,7 @@ namespace Elibri.EF.DTOS
 {
     public class CreateOrderDTO
     {
-        public List<CartItemDTO> CartItems { get; set; }
+        public List<CreateCartItemDTO> CartItems { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }

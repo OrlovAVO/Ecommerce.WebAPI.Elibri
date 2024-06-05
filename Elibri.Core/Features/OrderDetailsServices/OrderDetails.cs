@@ -63,7 +63,7 @@ namespace Elibri.Core.Features.OrderDetailsServices
                     OrderDetailId = od.OrderDetailId,
                     OrderId = od.OrderId,
                     CartItems = cartItemDTOs,
-                    TotalAmount = od.TotalAmount
+                    TotalPrice = od.TotalPrice
                 };
 
                 orderDetailDTOs.Add(orderDetailDTO);

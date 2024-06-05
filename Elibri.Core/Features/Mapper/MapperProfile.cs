@@ -18,7 +18,8 @@ namespace Elibri.Core.Features.Mapper
                 .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.OrderDetails.Select(od => new CartItemDTO
                 {
                     ProductId = od.ProductId,
-                    Quantity = od.StockQuantity
+                    Quantity = od.StockQuantity,
+                    Image = od.Product.Image
                 }).ToList()))
                 .ReverseMap();
 
@@ -26,7 +27,8 @@ namespace Elibri.Core.Features.Mapper
                 .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.Order.OrderDetails.Select(od => new CartItemDTO
                 {
                     ProductId = od.ProductId,
-                    Quantity = od.StockQuantity
+                    Quantity = od.StockQuantity,
+                    Image = od.Product.Image
                 }).ToList()))
                 .ReverseMap();
 

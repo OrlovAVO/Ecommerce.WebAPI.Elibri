@@ -28,7 +28,7 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetAllOrdersRoute)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<ActionResult<List<OrderDTO>>> GetAllOrders()
         {
             var orders = await _orderService.GetAllAsync();
@@ -79,6 +79,7 @@ namespace Elibri.Api.Controllers
             }
             return Ok(result);
         }
+
 
         /// <summary>
         /// Удаление заказа
