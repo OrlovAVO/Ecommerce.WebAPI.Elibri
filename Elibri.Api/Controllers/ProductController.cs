@@ -115,6 +115,25 @@ namespace Elibri.API.Controllers
             return Ok(products);
         }
 
+
+        /// <summary>
+        /// Получение похожих товаров 
+        /// </summary>
+        /// <remarks>
+        /// Для получения похожих товаров нужно указать productId
+        /// </remarks>
+        [HttpGet]
+        [Route(Routes.GetProductWithRelatedRoute)]
+        public async Task<ActionResult<ProductWithRelatedDTO>> GetProductWithRelated(int productId)
+        {
+            var productWithRelated = await _ProductService.GetProductWithRelatedAsync(productId);
+            if (productWithRelated == null)
+            {
+                return NotFound("Продукт не найден.");
+            }
+            return Ok(productWithRelated);
+        }
+
         /// <summary>
         /// Создание товара
         /// </summary>
