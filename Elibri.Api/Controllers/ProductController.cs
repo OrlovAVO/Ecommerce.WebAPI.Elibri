@@ -73,14 +73,14 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetProductByCategoryIdRoute)]
-        public async Task<ActionResult<List<ProductDTO>>> GetProductsByCategoryId(int categoryId)
+        public async Task<ActionResult<PagedResult<ProductDTO>>> GetProductsByCategoryId(int categoryId, int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _ProductService.GetProductsByCategoryIdAsync(categoryId);
+            var result = await _ProductService.GetProductsByCategoryIdAsync(categoryId, pageNumber, pageSize);
             if (result.Items == null || !result.Items.Any())
             {
                 return NotFound();
             }
-            return Ok(result.Items);
+            return Ok(result);
         }
 
         /// <summary>

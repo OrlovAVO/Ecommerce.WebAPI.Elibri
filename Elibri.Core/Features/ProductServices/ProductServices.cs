@@ -59,6 +59,7 @@ namespace Elibri.Core.Features.ProductServices
             };
         }
 
+
         public async Task<List<ProductDTO>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm, int pageNumber = 1, int pageSize = 10)
         {
             var products = await _productRepository.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm, pageNumber, pageSize);
@@ -80,7 +81,7 @@ namespace Elibri.Core.Features.ProductServices
 
             var relatedProducts = productsInSameCategory
                 .Where(p => p.ProductId != productId)
-                .Take(10)
+                .Take(8)
                 .ToList();
 
             var productWithRelated = _mapper.Map<ProductWithRelatedDTO>(product);
