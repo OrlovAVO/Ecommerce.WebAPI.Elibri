@@ -10,7 +10,13 @@ namespace Elibri.Core.Features.ProductServices
         Task<ProductDTO> GetByIdAsync(int id);
         Task<ProductDTO> CreateAsync(ProductDTO productDTO);
         Task<PagedResult<ProductDTO>> GetProductsByCategoryIdAsync(int categoryId, int pageNumber = 1, int pageSize = 10);
-        Task<List<ProductDTO>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm, int pageNumber = 1, int pageSize = 10);
+        Task<PagedResult<ProductDTO>> FilterProductsAsync(
+            int? categoryId,
+            int? maxDeliveryDays,
+            bool sortByPriceDescending,
+            string searchTerm,
+            int pageNumber,
+            int pageSize);
         Task<ProductWithRelatedDTO> GetProductWithRelatedAsync(int productId);
         Task<ProductDTO> GetByNameAsync(string name);
         Task UpdateAsync(ProductDTO productDTO);

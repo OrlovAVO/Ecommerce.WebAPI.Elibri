@@ -65,9 +65,20 @@ namespace Elibri.Core.Repository.ProductRepo
                 .ToListAsync();
         }
 
-        public async Task<List<Product>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm, int pageNumber, int pageSize)
+        public async Task<List<Product>> FilterProductsAsync(
+            int? categoryId,
+            int? maxDeliveryDays,
+            bool sortByPriceDescending,
+            string searchTerm,
+            int pageNumber,
+            int pageSize)
         {
-            var query = _context.Products.AsQueryable();
+            IQueryable<Product> query = _context.Products;
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
 
             if (maxDeliveryDays.HasValue)
             {
@@ -76,7 +87,9 @@ namespace Elibri.Core.Repository.ProductRepo
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+                // Преобразуйте searchTerm и названия товаров к нижнему (или верхнему) регистру перед сравнением
+                string searchTermLower = searchTerm.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(searchTermLower));
             }
 
             if (sortByPriceDescending)
@@ -88,10 +101,36 @@ namespace Elibri.Core.Repository.ProductRepo
                 query = query.OrderBy(p => p.Price);
             }
 
-            return await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return await query.ToListAsync();
+        }
+
+
+
+        public async Task<int> CountFilteredProductsAsync(
+            int? categoryId,
+            int? maxDeliveryDays,
+            string searchTerm)
+        {
+            IQueryable<Product> query = _context.Products;
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            if (maxDeliveryDays.HasValue)
+            {
+                query = query.Where(p => p.DeliveryDays <= maxDeliveryDays.Value);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            }
+
+            return await query.CountAsync();
         }
 
         public async Task<int> CountAsync()

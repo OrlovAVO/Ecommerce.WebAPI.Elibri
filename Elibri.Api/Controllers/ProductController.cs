@@ -91,24 +91,27 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetFilteredProductsRoute)]
-        public async Task<ActionResult<List<ProductDTO>>> FilterProducts(
+        public async Task<ActionResult<PagedResult<ProductDTO>>> FilterProducts(
             [FromQuery] int? maxDeliveryDays,
             [FromQuery] bool sortByPriceDescending,
-            [FromQuery] string searchTerm)
+            [FromQuery] int? categoryId = null,
+            [FromQuery] string searchTerm = null,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 7)
         {
-            if (!maxDeliveryDays.HasValue && string.IsNullOrEmpty(searchTerm))
+            if (!categoryId.HasValue && !maxDeliveryDays.HasValue && string.IsNullOrEmpty(searchTerm))
             {
-                return BadRequest("Поисковый запрос не может быть пустым.");
+                return BadRequest("Должен быть указан хотя бы один параметр фильтрации.");
             }
 
-            var products = await _ProductService.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm);
+            var pagedResult = await _ProductService.FilterProductsAsync(categoryId, maxDeliveryDays, sortByPriceDescending, searchTerm, pageNumber, pageSize);
 
-            if (products == null || products.Count == 0)
+            if (pagedResult.Items == null || !pagedResult.Items.Any())
             {
-                return NotFound("К сожалению, данного товара нет в нашем магазине.");
+                return NotFound("К сожалению, данные товары не найдены.");
             }
 
-            return Ok(products);
+            return Ok(pagedResult);
         }
 
 
