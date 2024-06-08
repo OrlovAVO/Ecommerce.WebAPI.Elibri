@@ -1,7 +1,4 @@
-﻿using Elibri.EF.DTOS;
-using System.Collections.Generic;
-
-namespace Elibri.EF.DTOS
+﻿namespace Elibri.EF.DTOS
 {
     public class OrderDTO
     {
@@ -10,6 +7,10 @@ namespace Elibri.EF.DTOS
         public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
-    }
+        public string Status { get; set; }
 
+        public string OrderDateFormatted => OrderDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"));
+        public string DeliveryDateFormatted => DeliveryDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"));
+        public string FormattedOrderId => OrderId.HasValue ? $"000000-{OrderId.Value:D4}" : null;
+    }
 }

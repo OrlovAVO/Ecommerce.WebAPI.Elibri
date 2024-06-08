@@ -35,6 +35,7 @@ namespace Elibri.Core.Features.OrderServices
             {
                 var orderDto = _mapper.Map<OrderDTO>(order);
 
+                // Даты уже будут в нужном формате благодаря свойствам OrderDateFormatted и DeliveryDateFormatted
                 foreach (var cartItem in orderDto.CartItems)
                 {
                     var product = order.OrderDetails.FirstOrDefault(od => od.ProductId == cartItem.ProductId)?.Product;
@@ -54,7 +55,7 @@ namespace Elibri.Core.Features.OrderServices
 
             if (userId == null)
             {
-                return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = "User not authenticated." };
+                return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = "Пользователь не аутентифицирован." };
             }
 
             var order = new Order
@@ -65,7 +66,8 @@ namespace Elibri.Core.Features.OrderServices
                 LastName = createOrderDto.LastName,
                 Address = createOrderDto.Address,
                 PhoneNumber = createOrderDto.PhoneNumber,
-                CardNumber = createOrderDto.CardNumber
+                CardNumber = createOrderDto.CardNumber,
+                Status = "В обработке" 
             };
 
             _context.Orders.Add(order);
@@ -78,12 +80,12 @@ namespace Elibri.Core.Features.OrderServices
                 var product = await _context.Products.FindAsync(cartItem.ProductId);
                 if (product == null)
                 {
-                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Product with ID:{cartItem.ProductId} not found." };
+                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Продукт с ID:{cartItem.ProductId} не найден." };
                 }
 
                 if (product.StockQuantity < cartItem.Quantity)
                 {
-                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Insufficient stock for product with ID:{cartItem.ProductId}." };
+                    return new ServiceResult<OrderDTO> { IsSuccess = false, ErrorMessage = $"Недостаточно запасов для продукта с ID:{cartItem.ProductId}." };
                 }
 
                 product.StockQuantity -= cartItem.Quantity;
@@ -103,7 +105,6 @@ namespace Elibri.Core.Features.OrderServices
 
                 _context.OrderDetails.Add(orderDetail);
 
-                // Вычисление даты доставки для текущего товара
                 var deliveryDate = DateTime.UtcNow.AddDays(product.DeliveryDays);
                 if (deliveryDate > maxDeliveryDate)
                 {
@@ -112,24 +113,17 @@ namespace Elibri.Core.Features.OrderServices
             }
 
             order.TotalPrice = totalAmount;
-            order.DeliveryDate = maxDeliveryDate; // Установка даты доставки для заказа
+            order.DeliveryDate = maxDeliveryDate; 
 
             await _context.SaveChangesAsync();
 
             var orderDTO = _mapper.Map<OrderDTO>(order);
 
+           
             return new ServiceResult<OrderDTO> { IsSuccess = true, Data = orderDTO };
         }
 
-        public async Task DeleteAsync(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
-        }
+
 
         public async Task<List<OrderDTO>> GetOrdersByUserIdAsync(string userId)
         {
@@ -143,6 +137,7 @@ namespace Elibri.Core.Features.OrderServices
             {
                 var orderDto = _mapper.Map<OrderDTO>(order);
 
+                // Даты уже будут в нужном формате благодаря свойствам OrderDateFormatted и DeliveryDateFormatted
                 foreach (var cartItem in orderDto.CartItems)
                 {
                     var product = order.OrderDetails.FirstOrDefault(od => od.ProductId == cartItem.ProductId)?.Product;
@@ -157,7 +152,20 @@ namespace Elibri.Core.Features.OrderServices
 
             return orderDTOs;
         }
+
+
+        public async Task DeleteAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
+
+
 
     public class ServiceResult<T>
     {

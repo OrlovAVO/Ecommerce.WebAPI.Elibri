@@ -23,14 +23,10 @@ namespace Elibri.API.Controllers
         /// </summary>
         [HttpGet]
         [Route(Routes.GetAllProductsRoute)]
-        public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
+        public async Task<ActionResult<PagedResult<ProductDTO>>> GetAllProducts(int pageNumber = 1, int pageSize = 10)
         {
-            var Products = await _ProductService.GetAllAsync();
-            if (Products == null)
-            {
-                return Ok(new List<ProductDTO>());
-            }
-            return Ok(Products);
+            var products = await _ProductService.GetAllAsync(pageNumber, pageSize);
+            return Ok(products);
         }
 
         /// <summary>
@@ -79,12 +75,12 @@ namespace Elibri.API.Controllers
         [Route(Routes.GetProductByCategoryIdRoute)]
         public async Task<ActionResult<List<ProductDTO>>> GetProductsByCategoryId(int categoryId)
         {
-            var products = await _ProductService.GetProductsByCategoryIdAsync(categoryId);
-            if (products == null || products.Count == 0)
+            var result = await _ProductService.GetProductsByCategoryIdAsync(categoryId);
+            if (result.Items == null || !result.Items.Any())
             {
                 return NotFound();
             }
-            return Ok(products);
+            return Ok(result.Items);
         }
 
         /// <summary>
@@ -142,7 +138,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpPost]
         [Route(Routes.CreateProductRoute)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO ProductDTO)
         {
             var createdProduct = await _ProductService.CreateAsync(ProductDTO);
@@ -159,7 +155,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpPut]
         [Route(Routes.UpdateProductRoute)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<IActionResult> Update(int id, ProductDTO ProductDTO)
         {
             var existingDto = await _ProductService.GetByIdAsync(id);

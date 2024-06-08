@@ -2,6 +2,7 @@ using Elibri.Core.Registration;
 using Elibri.EF.Registration;
 using Elibri.Authorization.Registration;
 using Elibri.Api.Registration;
+using Microsoft.OpenApi.Models;
 
 namespace Elibri.Hosting
 {
@@ -27,6 +28,11 @@ namespace Elibri.Hosting
             builder.Services.AddAuthServices(configuration);
             builder.Services.AddApiServices(configuration);
 
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+            });
+
             // Add CORS policy
             builder.Services.AddCors(options =>
             {
@@ -50,7 +56,10 @@ namespace Elibri.Hosting
                 if (app.Environment.EnvironmentName == "Development" || app.Environment.EnvironmentName == "swagger")
                 {
                     app.UseSwagger();
-                    app.UseSwaggerUI();
+                    app.UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elibri API V1");
+                    });
                 }
             }
 

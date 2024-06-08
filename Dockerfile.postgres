@@ -1,0 +1,10 @@
+FROM postgres:15 as postgres
+
+RUN mkdir -p /initdb.d
+
+COPY ./backup/*.dat /initdb.d/
+COPY ./backup/*.dat.gz /initdb.d/
+
+RUN find /initdb.d/ -name "*.dat.gz" -exec gunzip {} \;
+
+CMD ["postgres"]

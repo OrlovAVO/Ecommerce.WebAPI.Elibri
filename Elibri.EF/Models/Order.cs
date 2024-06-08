@@ -19,6 +19,7 @@ namespace Elibri.EF.Models
         public string CardNumber { get; set; }
         public User User { get; set; }
         public decimal TotalPrice { get; set; }
+        public string Status { get; set; }
 
 
         public Order()

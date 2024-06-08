@@ -28,6 +28,7 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = c.CategoryId,
                 Name = c.Name,
+                Image = c.Image,
 
             }).ToList();
         }
@@ -40,6 +41,7 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = category.CategoryId,
                 Name = category.Name,
+                Image = category.Image,
 
             };
         }

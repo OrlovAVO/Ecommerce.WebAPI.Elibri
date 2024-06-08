@@ -20,6 +20,12 @@ namespace Elibri.EF.Models
         [MaxLength(1000)]
         public string Description { get; set; }
 
+        public string Type { get; set; }
+
+        public string Color { get; set; }
+
+        public string Warranty { get; set; }
+
         [Required]
         public decimal Price { get; set; }
 
@@ -29,6 +35,15 @@ namespace Elibri.EF.Models
         public int CategoryId { get; set; }
 
         public string Image { get; set; }
+
+        public string Image1 { get; set; }
+
+        public string Image2 { get; set; }
+
+        public string Image3 { get; set; }
+
+        public string Image4 { get; set; }
+
 
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }

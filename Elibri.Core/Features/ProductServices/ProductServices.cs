@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Elibri.EF.DTOS;
 using Elibri.EF.Models;
 using Elibri.Core.Repository.ProductRepo;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.ProductServices
 {
@@ -18,10 +20,17 @@ namespace Elibri.Core.Features.ProductServices
             _mapper = mapper;
         }
 
-        public async Task<List<ProductDTO>> GetAllAsync()
+        public async Task<PagedResult<ProductDTO>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var products = await _productRepository.GetAllAsync();
-            return _mapper.Map<List<ProductDTO>>(products);
+            var products = await _productRepository.GetAllAsync(pageNumber, pageSize);
+            var totalItems = await _productRepository.CountAsync();
+            return new PagedResult<ProductDTO>
+            {
+                Items = _mapper.Map<List<ProductDTO>>(products),
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<ProductDTO> GetByIdAsync(int id)
@@ -37,10 +46,47 @@ namespace Elibri.Core.Features.ProductServices
             return _mapper.Map<ProductDTO>(product);
         }
 
-        public async Task<List<ProductDTO>> GetProductsByCategoryIdAsync(int categoryId)
+        public async Task<PagedResult<ProductDTO>> GetProductsByCategoryIdAsync(int categoryId, int pageNumber = 1, int pageSize = 10)
         {
-            var products = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
+            var products = await _productRepository.GetProductsByCategoryIdAsync(categoryId, pageNumber, pageSize);
+            var totalItems = await _productRepository.CountByCategoryAsync(categoryId);
+            return new PagedResult<ProductDTO>
+            {
+                Items = _mapper.Map<List<ProductDTO>>(products),
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<List<ProductDTO>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm, int pageNumber = 1, int pageSize = 10)
+        {
+            var products = await _productRepository.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm, pageNumber, pageSize);
             return _mapper.Map<List<ProductDTO>>(products);
+        }
+
+        public async Task<ProductWithRelatedDTO> GetProductWithRelatedAsync(int productId)
+        {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            int categoryId = product.CategoryId;
+
+            var productsInSameCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId, 1, 10);
+
+            var relatedProducts = productsInSameCategory
+                .Where(p => p.ProductId != productId)
+                .Take(10)
+                .ToList();
+
+            var productWithRelated = _mapper.Map<ProductWithRelatedDTO>(product);
+            productWithRelated.RelatedProducts = _mapper.Map<List<ProductDTO>>(relatedProducts);
+
+            return productWithRelated;
         }
 
         public async Task UpdateAsync(ProductDTO productDTO)
@@ -54,42 +100,6 @@ namespace Elibri.Core.Features.ProductServices
             _mapper.Map(productDTO, existingProduct);
             await _productRepository.UpdateAsync(existingProduct);
         }
-
-
-        public async Task<List<ProductWithRelatedDTO>> GetRelatedProductsAsync(int productId)
-        {
-            // Получаем товар по его идентификатору
-            var product = await _productRepository.GetByIdAsync(productId);
-
-            if (product == null)
-            {
-                // Если товар не найден, возвращаем пустой список
-                return new List<ProductWithRelatedDTO>();
-            }
-
-            // Получаем идентификатор категории товара
-            int categoryId = product.CategoryId;
-
-            // Получаем все товары с тем же идентификатором категории
-            var productsInSameCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
-
-            // Исключаем товар с указанным productId из списка
-            var relatedProducts = productsInSameCategory
-                .Where(p => p.ProductId != productId)
-                .Take(10)
-                .Select(p => new ProductWithRelatedDTO
-                {
-                    // Дополнительные поля, если необходимо
-                })
-                .ToList();
-
-            return relatedProducts;
-        }
-
-
-
-
-
 
         public async Task DeleteAsync(int id)
         {
@@ -106,44 +116,6 @@ namespace Elibri.Core.Features.ProductServices
         {
             var product = await _productRepository.GetByNameAsync(name);
             return _mapper.Map<ProductDTO>(product);
-        }
-
-        public async Task<List<ProductDTO>> FilterProductsAsync(int? maxDeliveryDays, bool sortByPriceDescending, string searchTerm)
-        {
-            var products = await _productRepository.FilterProductsAsync(maxDeliveryDays, sortByPriceDescending, searchTerm);
-            return _mapper.Map<List<ProductDTO>>(products);
-        }
-
-
-        public async Task<ProductWithRelatedDTO> GetProductWithRelatedAsync(int productId)
-        {
-            // Получаем товар по его идентификатору
-            var product = await _productRepository.GetByIdAsync(productId);
-
-            if (product == null)
-            {
-                // Если товар не найден, возвращаем null
-                return null;
-            }
-
-            // Получаем идентификатор категории товара
-            int categoryId = product.CategoryId;
-
-            // Получаем все товары с тем же идентификатором категории
-            var productsInSameCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
-
-            // Исключаем товар с указанным productId из списка и ограничиваем количество до 10
-            var relatedProducts = productsInSameCategory
-                .Where(p => p.ProductId != productId)
-                .Take(10)
-                .ToList();
-
-            // Маппим основную информацию о продукте
-            var productWithRelated = _mapper.Map<ProductWithRelatedDTO>(product);
-            // Маппим связанные продукты
-            productWithRelated.RelatedProducts = _mapper.Map<List<ProductDTO>>(relatedProducts);
-
-            return productWithRelated;
         }
     }
 }
