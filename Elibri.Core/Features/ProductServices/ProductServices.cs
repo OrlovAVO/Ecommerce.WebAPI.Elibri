@@ -59,29 +59,28 @@ namespace Elibri.Core.Features.ProductServices
             };
         }
 
-
         public async Task<PagedResult<ProductDTO>> FilterProductsAsync(
-                int? categoryId,
-                int? maxDeliveryDays,
-                bool sortByPriceDescending,
-                string searchTerm,
-                int pageNumber = 1,
-                int pageSize = 10)
+            int? categoryId,
+            int? maxDeliveryDays,
+            string sortOrder,
+            string searchTerm,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
-            // Вызов метода репозитория с новыми параметрами
-            var products = await _productRepository.FilterProductsAsync(categoryId, maxDeliveryDays, sortByPriceDescending, searchTerm, pageNumber, pageSize);
+            var (products, totalItems) = await _productRepository.FilterProductsAsync(
+                categoryId, maxDeliveryDays, sortOrder, searchTerm, pageNumber, pageSize);
 
-            // Подсчет общего количества товаров для учета пагинации
-            var totalItems = await _productRepository.CountFilteredProductsAsync(categoryId, maxDeliveryDays, searchTerm);
+            var productDTOs = _mapper.Map<List<ProductDTO>>(products);
 
             return new PagedResult<ProductDTO>
             {
-                Items = _mapper.Map<List<ProductDTO>>(products),
+                Items = productDTOs,
                 TotalItems = totalItems,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
         }
+
 
 
         public async Task<ProductWithRelatedDTO> GetProductWithRelatedAsync(int productId)

@@ -16,6 +16,7 @@ namespace Elibri.Core.Features.Mapper
             CreateMap<Review, ReviewDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
 
+
             CreateMap<Order, OrderDTO>()
                 .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.OrderDetails.Select(od => new CartItemDTO
                 {
@@ -35,6 +36,8 @@ namespace Elibri.Core.Features.Mapper
                 .ReverseMap();
 
             CreateMap<Product, ProductWithRelatedDTO>().ReverseMap();
+
+
         }
     }
 }

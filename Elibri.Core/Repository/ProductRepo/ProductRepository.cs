@@ -65,16 +65,17 @@ namespace Elibri.Core.Repository.ProductRepo
                 .ToListAsync();
         }
 
-        public async Task<List<Product>> FilterProductsAsync(
+        public async Task<(List<Product>, int)> FilterProductsAsync(
             int? categoryId,
             int? maxDeliveryDays,
-            bool sortByPriceDescending,
+            string sortOrder,
             string searchTerm,
             int pageNumber,
             int pageSize)
         {
             IQueryable<Product> query = _context.Products;
 
+            // Применяем фильтры
             if (categoryId.HasValue)
             {
                 query = query.Where(p => p.CategoryId == categoryId.Value);
@@ -87,24 +88,40 @@ namespace Elibri.Core.Repository.ProductRepo
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                // Преобразуйте searchTerm и названия товаров к нижнему (или верхнему) регистру перед сравнением
                 string searchTermLower = searchTerm.ToLower();
                 query = query.Where(p => p.Name.ToLower().Contains(searchTermLower));
             }
 
-            if (sortByPriceDescending)
+            // Считаем общее количество элементов до применения пагинации
+            int totalItems = await query.CountAsync();
+
+            // Применяем сортировку
+            switch (sortOrder?.ToLower())
             {
-                query = query.OrderByDescending(p => p.Price);
-            }
-            else
-            {
-                query = query.OrderBy(p => p.Price);
+                case "cheapest":
+                    query = query.OrderBy(p => p.Price);
+                    break;
+                case "mostexpensive":
+                    query = query.OrderByDescending(p => p.Price);
+                    break;
+                case "none":
+                default:
+                    // Сортировка не применяется, если sortOrder - "None" или другое значение
+                    break;
             }
 
+            // Применяем пагинацию
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return await query.ToListAsync();
+            // Получаем отфильтрованные и отсортированные элементы
+            List<Product> items = await query.ToListAsync();
+
+            // Возвращаем список элементов и общее количество
+            return (items, totalItems);
         }
+
+
+
 
 
 

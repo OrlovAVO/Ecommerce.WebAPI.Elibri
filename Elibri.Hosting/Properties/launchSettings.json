@@ -14,7 +14,6 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "elibri",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

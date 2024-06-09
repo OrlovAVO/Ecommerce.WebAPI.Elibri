@@ -85,34 +85,37 @@ namespace Elibri.API.Controllers
 
         /// <summary>
         /// Фильтрация товаров
-        /// </summary>
+        /// </summary>[Route(Routes.GetFilteredProductsRoute)]
         /// <remarks>
         /// Фильтрация товаров по максимальному времени доставки, сортировке по цене и поиску по названию
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetFilteredProductsRoute)]
-        public async Task<ActionResult<PagedResult<ProductDTO>>> FilterProducts(
+        public async Task<IActionResult> GetProducts(
+            [FromQuery] int? categoryId,
             [FromQuery] int? maxDeliveryDays,
-            [FromQuery] bool sortByPriceDescending,
-            [FromQuery] int? categoryId = null,
             [FromQuery] string searchTerm = null,
+            [FromQuery] string sortOrder = "None",
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 7)
         {
-            if (!categoryId.HasValue && !maxDeliveryDays.HasValue && string.IsNullOrEmpty(searchTerm))
+            var pagedResult = await _ProductService.FilterProductsAsync(
+                categoryId, maxDeliveryDays, sortOrder, searchTerm, pageNumber, pageSize);
+
+            var response = new
             {
-                return BadRequest("Должен быть указан хотя бы один параметр фильтрации.");
-            }
+                Items = pagedResult.Items,
+                TotalItems = pagedResult.TotalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(pagedResult.TotalItems / (double)pageSize)
+            };
 
-            var pagedResult = await _ProductService.FilterProductsAsync(categoryId, maxDeliveryDays, sortByPriceDescending, searchTerm, pageNumber, pageSize);
-
-            if (pagedResult.Items == null || !pagedResult.Items.Any())
-            {
-                return NotFound("К сожалению, данные товары не найдены.");
-            }
-
-            return Ok(pagedResult);
+            return Ok(response);
         }
+
+
+
 
 
         /// <summary>
@@ -185,27 +188,6 @@ namespace Elibri.API.Controllers
             return Ok("Товар успешно удалён.");
         }
 
-
-
-
-
-        /*        [HttpGet("{id}/reviews")]
-                public async Task<ActionResult<List<ReviewDTO>>> GetReviewsByProductId(int id) // Новое
-                {
-                    var reviews = await _ProductService.GetReviewsByProductIdAsync(id);
-                    if (reviews == null || reviews.Count == 0)
-                    {
-                        return NotFound();
-                    }
-                    return Ok(reviews);
-                }
-
-                [HttpPost("{id}/reviews")]
-                public async Task<ActionResult<ReviewDTO>> AddReview(int id, ReviewDTO reviewDTO) // Новое
-                {
-                    reviewDTO.ProductId = id;
-                    var createdReview = await _ProductService.AddReviewAsync(reviewDTO);
-                    return Ok(createdReview);*/
     }
 }
 

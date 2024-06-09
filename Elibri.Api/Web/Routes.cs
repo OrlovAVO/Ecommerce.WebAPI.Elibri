@@ -79,7 +79,7 @@
         public const string GetAllProductsRoute = $"{ProductRoute}/all";
         public const string GetProductByIdRoute = $"{ProductRoute}/productId";
         public const string GetFilteredProductsRoute = $"{ProductRoute}";
-        public const string GetProductWithRelatedRoute = "api/products/with-related";
+        public const string GetProductWithRelatedRoute = "api/products/withRelated";
         public const string CreateProductRoute = $"{ProductRoute}/create";
         public const string GetProductByCategoryIdRoute = $"{ProductRoute}/categoryId";
         public const string UpdateProductRoute = $"{ProductRoute}/update";

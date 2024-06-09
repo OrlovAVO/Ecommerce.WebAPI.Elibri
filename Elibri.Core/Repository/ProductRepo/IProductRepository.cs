@@ -13,14 +13,13 @@ namespace Elibri.Core.Repository.ProductRepo
         Task DeleteAsync(int id);
         Task<Product> GetByNameAsync(string name);
         Task<List<Product>> GetProductsByCategoryIdAsync(int categoryId, int pageNumber, int pageSize);
-        Task<List<Product>> FilterProductsAsync(
+        Task<(List<Product> Items, int TotalItems)> FilterProductsAsync(
             int? categoryId,
             int? maxDeliveryDays,
-            bool sortByPriceDescending,
+            string sortOrder, 
             string searchTerm,
             int pageNumber,
             int pageSize);
-
         Task<int> CountFilteredProductsAsync(
             int? categoryId,
             int? maxDeliveryDays,

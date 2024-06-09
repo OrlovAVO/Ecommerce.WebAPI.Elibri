@@ -88,7 +88,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteUserRoute)]
-        [Authorize(Roles = "Admin")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<IActionResult> DeleteUser(int id)
         {
             await _userService.DeleteAsync(id);

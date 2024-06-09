@@ -49,13 +49,13 @@ namespace Elibri.Api.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
-                return BadRequest("User not found");
+                return BadRequest("Пользователь не найден.");
             }
 
             var orders = await _orderService.GetOrdersByUserIdAsync(userId);
             if (orders == null || !orders.Any())
             {
-                return NotFound("User order not found");
+                return NotFound("У пользователя нет заказов.");
             }
 
             return Ok(orders);
@@ -89,11 +89,11 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteOrderRoute)]
-        [Authorize(Roles = "User")]
+/*        [Authorize(Roles = "Admin")]*/
         public async Task<IActionResult> DeleteOrder(int id)
         {
             await _orderService.DeleteAsync(id);
-            return Ok("Товар успешно удалён.");
+            return Ok("Заказ успешно удалён.");
         }
     }
 }
