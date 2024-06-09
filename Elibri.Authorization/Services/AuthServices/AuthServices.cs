@@ -34,7 +34,7 @@ namespace Elibri.Authorization.Services.AuthServices
 
         public async Task<IActionResult> RegisterAdmin(RegisterDto model)
         {
-            var existingUser = await _userManager.FindByNameAsync(model.UserName); //Проверка username в бд
+            var existingUser = await _userManager.FindByNameAsync(model.UserName);
             if (existingUser != null)
             {
                 return new BadRequestObjectResult("Администратор уже существует.");

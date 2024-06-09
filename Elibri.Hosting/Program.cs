@@ -39,7 +39,7 @@ namespace Elibri.Hosting
                 options.AddPolicy("AllowSpecificOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3001")
+                        builder.WithOrigins("http://25.32.59.44:3000", "http://localhost:3000")
                                .AllowAnyHeader()
                                .AllowAnyMethod();
                     });
