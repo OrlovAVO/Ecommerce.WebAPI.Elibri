@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using Elibri.Core.Repository.UserRepo;
 using Elibri.EF.DTOS;
-using Microsoft.AspNetCore.Identity;
-using Elibri.Core.Repository.UserRepo;
 using Elibri.EF.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Elibri.Core.Features.UserServices
 {
@@ -17,6 +16,7 @@ namespace Elibri.Core.Features.UserServices
             _userManager = userManager;
         }
 
+        // Получает всех пользователей асинхронно.
         public async Task<List<UserDTO>> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -28,6 +28,7 @@ namespace Elibri.Core.Features.UserServices
             }).ToList();
         }
 
+        // Получает пользователя по идентификатору асинхронно.
         public async Task<UserDTO> GetByIdAsync(string id)
         {
             var user = await _userRepository.GetByIdAsync(id);
@@ -43,6 +44,7 @@ namespace Elibri.Core.Features.UserServices
             };
         }
 
+        // Получает пользователя по имени пользователя асинхронно.
         public async Task<UserDTO> GetByUsernameAsync(string username)
         {
             var user = await _userRepository.GetByUsernameAsync(username);
@@ -58,6 +60,7 @@ namespace Elibri.Core.Features.UserServices
             };
         }
 
+        // Обновляет информацию о пользователе асинхронно.
         public async Task UpdateAsync(UserDTO userDTO)
         {
             var user = await _userRepository.GetByIdAsync(userDTO.Id);
@@ -69,6 +72,7 @@ namespace Elibri.Core.Features.UserServices
             }
         }
 
+        // Удаляет пользователя по идентификатору асинхронно.
         public async Task DeleteAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -78,6 +82,7 @@ namespace Elibri.Core.Features.UserServices
             }
         }
 
+        // Создает нового пользователя асинхронно.
         public async Task<UserDTO> CreateAsync(UserDTO userDTO)
         {
             var user = new User
@@ -96,6 +101,7 @@ namespace Elibri.Core.Features.UserServices
             return createdUserDTO;
         }
 
+        // Получает пользователя по адресу электронной почты асинхронно.
         public async Task<UserDTO> GetUserByEmail(string email)
         {
             var user = await _userRepository.GetByEmailAsync(email);
@@ -110,6 +116,5 @@ namespace Elibri.Core.Features.UserServices
                 Email = user.Email
             };
         }
-
     }
 }

@@ -27,7 +27,6 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetCategoriesRoute)]
-/*        [Authorize(Roles = "User")]*/
         public async Task<ActionResult<List<CategoryDTO>>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllAsync();
@@ -46,7 +45,6 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetCategoryByIdRoute)]
-/*        [Authorize(Roles = "User")]*/
         public async Task<ActionResult<CategoryDTO>> GetCategoryById(int id)
         {
             var category = await _categoryService.GetByIdAsync(id);
@@ -65,7 +63,7 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpPost]
         [Route(Routes.CreateCategoryRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryDTO>> CreateCategory(CategoryDTO categoryDTO)
         {
             var createdCategory = await _categoryService.CreateAsync(categoryDTO);
@@ -80,7 +78,7 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpPut]
         [Route(Routes.UpdateCategoryRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, CategoryDTO categoryDTO)
         {
             var existingDto = await _categoryService.GetByIdAsync(id);
@@ -100,7 +98,7 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteCategoryRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             await _categoryService.DeleteAsync(id);
@@ -108,7 +106,3 @@ namespace Elibri.Api.Controllers
         }
     }
 }
-
-
-
-//РЕАЛИЗОВАТЬ ПО НАЗВАНИЮ ВЫТЯГИВАНИЕ

@@ -114,10 +114,6 @@ namespace Elibri.API.Controllers
             return Ok(response);
         }
 
-
-
-
-
         /// <summary>
         /// Получение похожих товаров 
         /// </summary>
@@ -161,7 +157,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpPut]
         [Route(Routes.UpdateProductRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, ProductDTO ProductDTO)
         {
             var existingDto = await _ProductService.GetByIdAsync(id);
@@ -181,7 +177,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteProductRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _ProductService.DeleteAsync(id);

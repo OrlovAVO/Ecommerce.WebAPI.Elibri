@@ -3,12 +3,14 @@ using Elibri.Core.Repository.GenericRepo;
 
 namespace Elibri.Core.Repository.CategoryRepo
 {
+    // Репозиторий для работы с данными категорий
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
-        Context _cont;
+        private readonly Context _context;
+
         public CategoryRepository(Context context) : base(context)
         {
-            _cont = context;
+            _context = context;
         }
     }
 }

@@ -1,21 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using Microsoft.AspNetCore.Identity;
-using Elibri.EF.DTOS;
-using Elibri.Authorization.Services.AuthServices;
-using Microsoft.AspNetCore.Identity.Data;
-using Elibri.Authorization.Services.EmailServices;
-using Elibri.Authorization.Services.TokenServices;
-using Elibri.Core.Features.UserServices;
-using Elibri.Authorization.Services.ResetServices;
-using Serilog;
-using Elibri.Core.Repository.UserRepo;
-using Elibri.Core.Features;
-using Elibri.Api.Web;
-using System.Net;
-using Elibri.EF.Models;
+﻿using Elibri.Api.Web;
 using Elibri.Authorization.DTOS;
+using Elibri.Authorization.Services.AuthServices;
+using Elibri.Authorization.Services.EmailServices;
+using Elibri.Authorization.Services.ResetServices;
+using Elibri.Core.Features.UserServices;
+using Elibri.EF.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using System.Net;
 
 
 namespace Elibri.API.Controllers
@@ -52,7 +46,7 @@ namespace Elibri.API.Controllers
         [Route(Routes.AdminRegistrationRoute)]
         [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin(RegisterDto model)
         {
             return await _authService.RegisterAdmin(model);
@@ -116,45 +110,6 @@ namespace Elibri.API.Controllers
             }
             return BadRequest(ModelState);
         }
-        /// <summary>
-        /// Смена пароля через авторизированный аккаунт
-        /// </summary>
-        /// <remarks>
-        /// Для сброса пароля нужно указать старый пароль
-        /// </remarks>
-        [HttpPost]
-        [Route(Routes.ChangePassword)]
-        [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        [Authorize(Roles = "User")] 
-        public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                {
-                    return NotFound("Пользователь не найден");
-                }
-
-                var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                if (result.Succeeded)
-                {
-                    return Ok("Пароль успешно изменен");
-                }
-                else
-                {
-                    return BadRequest(result.Errors);
-                }
-            }
-
-            return BadRequest("Некорректная модель");
-        }
-
-
-
-
-
 
     }
 

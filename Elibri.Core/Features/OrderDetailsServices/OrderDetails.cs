@@ -1,23 +1,21 @@
-﻿using Elibri.EF.DTOS;
-using Elibri.Core.Repository.OrderDetailsRepo;
-using Elibri.EF.Models;
+﻿using AutoMapper;
 using Elibri.Core.Features.GenericServices;
-using AutoMapper;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Elibri.Core.Repository.OrderDetailsRepo;
+using Elibri.EF.DTOS;
+using Elibri.EF.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elibri.Core.Features.OrderDetailsServices
 {
+    // Сервис для работы с деталями заказов.
     public class OrderDetailService : GenericService<OrderDetail, OrderDetailDTO>, IOrderDetailService
     {
         private readonly IOrderDetailsRepository _repository;
         private readonly IMapper _mapper;
         private readonly Context _context;
 
+        // Конструктор класса OrderDetailService.
         public OrderDetailService(IOrderDetailsRepository repository, IMapper mapper, Context context)
             : base(repository, mapper)
         {
@@ -26,6 +24,7 @@ namespace Elibri.Core.Features.OrderDetailsServices
             _context = context;
         }
 
+        // Получает детали заказов по идентификатору пользователя асинхронно.
         public async Task<List<OrderDetailDTO>> GetOrderDetailsByUserIdAsync(string userId)
         {
             var orderDetails = await _repository.GetAll()
@@ -36,6 +35,7 @@ namespace Elibri.Core.Features.OrderDetailsServices
             return _mapper.Map<List<OrderDetailDTO>>(orderDetails);
         }
 
+        // Получает все детали заказов асинхронно.
         public async Task<ActionResult<List<OrderDetailDTO>>> GetAllOrderDetails()
         {
             var orderDetails = await GetAllAsync();
@@ -49,7 +49,7 @@ namespace Elibri.Core.Features.OrderDetailsServices
             foreach (var od in orderDetails)
             {
                 var cartItems = await _context.CartItems
-                    .Where(ci => ci.CartId == od.OrderId) 
+                    .Where(ci => ci.CartId == od.OrderId)
                     .ToListAsync();
 
                 var cartItemDTOs = cartItems.Select(ci => new CartItemDTO

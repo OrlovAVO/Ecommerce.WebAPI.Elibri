@@ -3,20 +3,18 @@ using Elibri.EF.DTOS;
 using Elibri.EF.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.OrderServices
 {
+    // Сервис для управления заказами.
     public class OrderService : IOrderService
     {
         private readonly Context _context;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        // Инициализирует новый экземпляр класса OrderService.
         public OrderService(Context context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
@@ -24,6 +22,7 @@ namespace Elibri.Core.Features.OrderServices
             _httpContextAccessor = httpContextAccessor;
         }
 
+        // Получает все заказы асинхронно.
         public async Task<List<OrderDTO>> GetAllAsync()
         {
             var orders = await _context.Orders
@@ -49,6 +48,7 @@ namespace Elibri.Core.Features.OrderServices
             }).ToList();
         }
 
+        // Создает заказ асинхронно.
         public async Task<ServiceResult<OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -67,7 +67,7 @@ namespace Elibri.Core.Features.OrderServices
                 Address = createOrderDto.Address,
                 PhoneNumber = createOrderDto.PhoneNumber,
                 CardNumber = createOrderDto.CardNumber,
-                Status = "В обработке" 
+                Status = "В обработке"
             };
 
             _context.Orders.Add(order);
@@ -113,18 +113,17 @@ namespace Elibri.Core.Features.OrderServices
             }
 
             order.TotalPrice = totalAmount;
-            order.DeliveryDate = maxDeliveryDate; 
+            order.DeliveryDate = maxDeliveryDate;
 
             await _context.SaveChangesAsync();
 
             var orderDTO = _mapper.Map<OrderDTO>(order);
 
-           
+
             return new ServiceResult<OrderDTO> { IsSuccess = true, Data = orderDTO };
         }
 
-
-
+        // Получает заказы пользователя по идентификатору пользователя асинхронно.
         public async Task<List<OrderDTO>> GetOrdersByUserIdAsync(string userId)
         {
             var orders = await _context.Orders
@@ -153,7 +152,7 @@ namespace Elibri.Core.Features.OrderServices
             return orderDTOs;
         }
 
-
+        // Удаляет заказ асинхронно по идентификатору.
         public async Task DeleteAsync(int id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -165,8 +164,7 @@ namespace Elibri.Core.Features.OrderServices
         }
     }
 
-
-
+    // Результат выполнения операции сервиса.
     public class ServiceResult<T>
     {
         public bool IsSuccess { get; set; }
@@ -174,5 +172,3 @@ namespace Elibri.Core.Features.OrderServices
         public T Data { get; set; }
     }
 }
-
-

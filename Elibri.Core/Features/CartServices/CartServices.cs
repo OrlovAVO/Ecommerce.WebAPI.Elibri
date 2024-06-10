@@ -1,9 +1,6 @@
 ﻿using Elibri.EF.DTOS;
 using Elibri.EF.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.CartServices
 {
@@ -16,6 +13,7 @@ namespace Elibri.Core.Features.CartServices
             _context = context;
         }
 
+        // Получает все корзины асинхронно.
         public async Task<List<CartDTO>> GetAllAsync()
         {
             var carts = await _context.Carts
@@ -33,6 +31,7 @@ namespace Elibri.Core.Features.CartServices
             return carts;
         }
 
+        // Получает корзину по идентификатору асинхронно.
         public async Task<CartDTO> GetByIdAsync(int id)
         {
             var cart = await _context.Carts
@@ -51,6 +50,7 @@ namespace Elibri.Core.Features.CartServices
             return cart;
         }
 
+        // Создает новую корзину асинхронно.
         public async Task<CartDTO> CreateAsync(CartDTO cartDTO)
         {
             var cart = new Cart
@@ -66,6 +66,7 @@ namespace Elibri.Core.Features.CartServices
             return cartDTO;
         }
 
+        // Обновляет существующую корзину асинхронно.
         public async Task UpdateAsync(CartDTO cartDTO)
         {
             var cart = await _context.Carts.FindAsync(cartDTO.CartId);
@@ -83,6 +84,7 @@ namespace Elibri.Core.Features.CartServices
             }
         }
 
+        // Удаляет корзину по идентификатору асинхронно.
         public async Task DeleteAsync(int id)
         {
             var cart = await _context.Carts.FindAsync(id);
@@ -93,6 +95,7 @@ namespace Elibri.Core.Features.CartServices
             }
         }
 
+        // Добавляет продукт в корзину асинхронно.
         public async Task<ServiceResult> AddProductToCartAsync(int cartId, int productId, int quantity)
         {
             var cart = await _context.Carts.FindAsync(cartId);
@@ -120,6 +123,7 @@ namespace Elibri.Core.Features.CartServices
             return new ServiceResult { IsSuccess = true };
         }
 
+        // Обновляет количество продукта в корзине асинхронно.
         public async Task<ServiceResult> UpdateProductQuantityInCartAsync(int cartId, int productId, int quantity)
         {
             var cart = await _context.Carts.FindAsync(cartId);

@@ -1,13 +1,9 @@
-﻿using Elibri.EF.Models;
-using Elibri.Core.Repository.GenericRepo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Elibri.Core.Repository.GenericRepo;
+using Elibri.EF.Models;
 
 namespace Elibri.Core.Repository.CartRepo
 {
+    // Интерфейс для взаимодействия с данными корзины
     public interface ICartRepository : IGenericRepository<Cart>
     {
     }

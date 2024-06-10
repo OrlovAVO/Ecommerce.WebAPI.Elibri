@@ -1,17 +1,10 @@
-﻿using Elibri.EF.Models;
-using Elibri.Core.Repository.GenericRepo;
+﻿using Elibri.Core.Repository.GenericRepo;
 using Elibri.EF.DTOS;
-using Elibri.Core.Repository.UserRepo;
-using Elibri.Core.Features.GenericServices;
-using Elibri.Core.Features.ProductServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Elibri.EF.Models;
 
 namespace Elibri.Core.Features.CategoryServices
 {
+    // Сервис для работы с категориями.
     public class CategoryService : ICategoryService
     {
         private readonly IGenericRepository<Category> _categoryRepository;
@@ -21,6 +14,7 @@ namespace Elibri.Core.Features.CategoryServices
             _categoryRepository = categoryRepository;
         }
 
+        // Получает все категории асинхронно.
         public async Task<List<CategoryDTO>> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
@@ -29,10 +23,10 @@ namespace Elibri.Core.Features.CategoryServices
                 CategoryId = c.CategoryId,
                 Name = c.Name,
                 Image = c.Image,
-
             }).ToList();
         }
 
+        // Получает категорию по идентификатору асинхронно.
         public async Task<CategoryDTO> GetByIdAsync(int id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
@@ -42,10 +36,10 @@ namespace Elibri.Core.Features.CategoryServices
                 CategoryId = category.CategoryId,
                 Name = category.Name,
                 Image = category.Image,
-
             };
         }
 
+        // Создает новую категорию асинхронно.
         public async Task<CategoryDTO> CreateAsync(CategoryDTO categoryDTO)
         {
             if (string.IsNullOrEmpty(categoryDTO.Image))
@@ -56,7 +50,7 @@ namespace Elibri.Core.Features.CategoryServices
             var category = new Category
             {
                 Name = categoryDTO.Name,
-                Image = categoryDTO.Image  
+                Image = categoryDTO.Image
             };
 
             var createdCategory = await _categoryRepository.CreateAsync(category);
@@ -64,10 +58,11 @@ namespace Elibri.Core.Features.CategoryServices
             {
                 CategoryId = createdCategory.CategoryId,
                 Name = createdCategory.Name,
-                Image = createdCategory.Image  
+                Image = createdCategory.Image
             };
         }
 
+        // Обновляет информацию о категории асинхронно.
         public async Task UpdateAsync(CategoryDTO categoryDTO)
         {
             var category = await _categoryRepository.GetByIdAsync(categoryDTO.CategoryId);
@@ -75,10 +70,10 @@ namespace Elibri.Core.Features.CategoryServices
 
             category.Name = categoryDTO.Name;
 
-
             await _categoryRepository.UpdateAsync(category);
         }
 
+        // Удаляет категорию по идентификатору асинхронно.
         public async Task DeleteAsync(int id)
         {
             await _categoryRepository.DeleteAsync(id);

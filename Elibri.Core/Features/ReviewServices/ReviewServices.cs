@@ -1,10 +1,5 @@
 ﻿using Elibri.EF.DTOS;
-using Elibri.Core.Repository;
 using Elibri.EF.Models;
-using Elibri.Core.Repository.ReviewRepo;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Elibri.Core.Features.ReviewServices
 {
@@ -17,6 +12,7 @@ namespace Elibri.Core.Features.ReviewServices
             _context = context;
         }
 
+        // Добавляет или обновляет отзыв.
         public async Task AddOrUpdateReview(ReviewDTO reviewDto)
         {
             var existingReview = _context.Reviews
@@ -43,6 +39,7 @@ namespace Elibri.Core.Features.ReviewServices
             await _context.SaveChangesAsync();
         }
 
+        // Удаляет отзыв по идентификатору.
         public async Task DeleteReview(int reviewId)
         {
             var review = _context.Reviews.FirstOrDefault(r => r.ReviewId == reviewId);
@@ -53,6 +50,7 @@ namespace Elibri.Core.Features.ReviewServices
             }
         }
 
+        // Получает отзывы по идентификатору продукта.
         public async Task<IEnumerable<ReviewDTO>> GetReviewsByProduct(int productId)
         {
             return _context.Reviews
@@ -67,6 +65,7 @@ namespace Elibri.Core.Features.ReviewServices
                 }).ToList();
         }
 
+        // Получает рейтинг продукта по идентификатору.
         public async Task<double> GetProductRating(int productId)
         {
             var reviews = _context.Reviews.Where(r => r.ProductId == productId);
@@ -77,6 +76,7 @@ namespace Elibri.Core.Features.ReviewServices
             return 0;
         }
 
+        // Получает количество отзывов для продукта по идентификатору.
         public async Task<int> GetReviewCount(int productId)
         {
             return _context.Reviews.Count(r => r.ProductId == productId);

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using Elibri.Core.Repository.ProductRepo;
 using Elibri.EF.DTOS;
 using Elibri.EF.Models;
-using Elibri.Core.Repository.ProductRepo;
 
 namespace Elibri.Core.Features.ProductServices
 {
@@ -20,6 +16,7 @@ namespace Elibri.Core.Features.ProductServices
             _mapper = mapper;
         }
 
+        // Получает все продукты асинхронно с разбиением на страницы.
         public async Task<PagedResult<ProductDTO>> GetAllAsync(int pageNumber, int pageSize)
         {
             var products = await _productRepository.GetAllAsync(pageNumber, pageSize);
@@ -33,12 +30,14 @@ namespace Elibri.Core.Features.ProductServices
             };
         }
 
+        // Получает продукт по идентификатору асинхронно.
         public async Task<ProductDTO> GetByIdAsync(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
             return _mapper.Map<ProductDTO>(product);
         }
 
+        // Создает продукт асинхронно.
         public async Task<ProductDTO> CreateAsync(ProductDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);
@@ -46,6 +45,7 @@ namespace Elibri.Core.Features.ProductServices
             return _mapper.Map<ProductDTO>(product);
         }
 
+        // Получает все продукты по идентификатору категории асинхронно с разбиением на страницы.
         public async Task<PagedResult<ProductDTO>> GetProductsByCategoryIdAsync(int categoryId, int pageNumber = 1, int pageSize = 10)
         {
             var products = await _productRepository.GetProductsByCategoryIdAsync(categoryId, pageNumber, pageSize);
@@ -59,6 +59,7 @@ namespace Elibri.Core.Features.ProductServices
             };
         }
 
+        // Фильтрует продукты асинхронно по различным параметрам с разбиением на страницы.
         public async Task<PagedResult<ProductDTO>> FilterProductsAsync(
             int? categoryId,
             int? maxDeliveryDays,
@@ -81,8 +82,7 @@ namespace Elibri.Core.Features.ProductServices
             };
         }
 
-
-
+        // Получает продукт с его связанными элементами асинхронно по идентификатору.
         public async Task<ProductWithRelatedDTO> GetProductWithRelatedAsync(int productId)
         {
             var product = await _productRepository.GetByIdAsync(productId);
@@ -94,11 +94,11 @@ namespace Elibri.Core.Features.ProductServices
 
             int categoryId = product.CategoryId;
 
-            var productsInSameCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId, 1, 10);
+            var productsInSameCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId, 1, 11);
 
             var relatedProducts = productsInSameCategory
                 .Where(p => p.ProductId != productId)
-                .Take(8)
+                .Take(10)
                 .ToList();
 
             var productWithRelated = _mapper.Map<ProductWithRelatedDTO>(product);
@@ -107,6 +107,7 @@ namespace Elibri.Core.Features.ProductServices
             return productWithRelated;
         }
 
+        // Обновляет информацию о продукте асинхронно.
         public async Task UpdateAsync(ProductDTO productDTO)
         {
             var existingProduct = await _productRepository.GetByIdAsync(productDTO.ProductId);
@@ -119,6 +120,7 @@ namespace Elibri.Core.Features.ProductServices
             await _productRepository.UpdateAsync(existingProduct);
         }
 
+        // Удаляет продукт асинхронно по идентификатору.
         public async Task DeleteAsync(int id)
         {
             var existingProduct = await _productRepository.GetByIdAsync(id);
@@ -130,6 +132,7 @@ namespace Elibri.Core.Features.ProductServices
             await _productRepository.DeleteAsync(existingProduct.ProductId);
         }
 
+        // Получает продукт по имени асинхронно.
         public async Task<ProductDTO> GetByNameAsync(string name)
         {
             var product = await _productRepository.GetByNameAsync(name);

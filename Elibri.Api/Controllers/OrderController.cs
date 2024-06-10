@@ -1,16 +1,13 @@
 ﻿using Elibri.Api.Web;
-using Elibri.EF.DTOS;
 using Elibri.Core.Features.OrderServices;
+using Elibri.EF.DTOS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using System.Security.Claims;
 
 namespace Elibri.Api.Controllers
 {
     [ApiController]
+
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -21,43 +18,17 @@ namespace Elibri.Api.Controllers
         }
 
         /// <summary>
-        /// Получение всех заказов
+        /// Получение заказов всех пользователей
         /// </summary>
         /// <remarks>
-        /// Для получения заказов нужно иметь права администратора
+        /// Для получения заказов всех пользователей нужно иметь права администратора
         /// </remarks>
         [HttpGet]
         [Route(Routes.GetAllOrdersRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<OrderDTO>>> GetAllOrders()
         {
             var orders = await _orderService.GetAllAsync();
-            return Ok(orders);
-        }
-
-        /// <summary>
-        /// Получение заказов авторизованного пользователя 
-        /// </summary>
-        /// <remarks>
-        /// Для получения заказов нужно авторизироваться
-        /// </remarks>
-        [HttpGet]
-        [Route(Routes.GetOrderByIdRoute)]
-        [Authorize(Roles = "User")]
-        public async Task<ActionResult<List<OrderDTO>>> GetOrderById()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return BadRequest("Пользователь не найден.");
-            }
-
-            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
-            if (orders == null || !orders.Any())
-            {
-                return NotFound("У пользователя нет заказов.");
-            }
-
             return Ok(orders);
         }
 
@@ -89,7 +60,7 @@ namespace Elibri.Api.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteOrderRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             await _orderService.DeleteAsync(id);

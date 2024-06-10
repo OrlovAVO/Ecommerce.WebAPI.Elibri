@@ -1,9 +1,7 @@
 ﻿using Elibri.Api.Web;
-using Elibri.EF.DTOS;
 using Elibri.Core.Features.UserServices;
+using Elibri.EF.DTOS;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elibri.API.Controllers
@@ -88,7 +86,7 @@ namespace Elibri.API.Controllers
         /// </remarks>
         [HttpDelete]
         [Route(Routes.DeleteUserRoute)]
-/*        [Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             await _userService.DeleteAsync(id);
