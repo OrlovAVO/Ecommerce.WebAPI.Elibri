@@ -1,17 +1,23 @@
-﻿using Elibri.EF.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elibri.EF.DTOS
+﻿namespace Elibri.EF.DTOS
 {
+    /// <summary>
+    /// DTO для категорий продуктов.
+    /// </summary>
     public class CategoryDTO
     {
+        /// <summary>
+        /// Идентификатор категории.
+        /// </summary>
         public int CategoryId { get; set; }
-        public string Name { get; set; }
-        public string Image { get; set; }
 
+        /// <summary>
+        /// Название категории.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Изображение категории.
+        /// </summary>
+        public string Image { get; set; }
     }
 }

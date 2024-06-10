@@ -1,24 +1,33 @@
-﻿using Elibri.EF.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Elibri.EF.Models
 {
+    /// <summary>
+    /// Модель корзины.
+    /// </summary>
     public class Cart
     {
+        /// <summary>
+        /// Идентификатор корзины.
+        /// </summary>
         [Key]
-        [Required]
+        [Required(ErrorMessage = "CartId is required.")]
         public int CartId { get; set; }
 
-        [Required]
+        /// <summary>
+        /// Идентификатор пользователя.
+        /// </summary>
+        [Required(ErrorMessage = "UserId is required.")]
         public string UserId { get; set; }
 
+        /// <summary>
+        /// Связанный пользователь.
+        /// </summary>
         public User User { get; set; }
 
+        /// <summary>
+        /// Элементы корзины.
+        /// </summary>
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 }

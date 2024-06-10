@@ -1,27 +1,64 @@
-﻿using Elibri.EF.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Elibri.EF.Models
 {
+    /// <summary>
+    /// Контекст базы данных приложения.
+    /// </summary>
     public class Context : IdentityDbContext<User>
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Создает новый экземпляр контекста базы данных.
+        /// </summary>
+        /// <param name="configuration">Конфигурация приложения.</param>
         public Context(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Набор данных для продуктов.
+        /// </summary>
         public DbSet<Product> Products { get; set; }
+
+        /// <summary>
+        /// Набор данных для категорий.
+        /// </summary>
         public DbSet<Category> Categories { get; set; }
+
+        /// <summary>
+        /// Набор данных для заказов.
+        /// </summary>
         public DbSet<Order> Orders { get; set; }
+
+        /// <summary>
+        /// Набор данных для деталей заказов.
+        /// </summary>
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        /// <summary>
+        /// Набор данных для корзин.
+        /// </summary>
         public DbSet<Cart> Carts { get; set; }
+
+        /// <summary>
+        /// Набор данных для элементов корзины.
+        /// </summary>
         public DbSet<CartItem> CartItems { get; set; }
+
+        /// <summary>
+        /// Набор данных для отзывов.
+        /// </summary>
         public DbSet<Review> Reviews { get; set; }
 
+        /// <summary>
+        /// Конфигурация контекста базы данных.
+        /// </summary>
+        /// <param name="optionsBuilder">Построитель опций контекста.</param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
@@ -29,6 +66,10 @@ namespace Elibri.EF.Models
             base.OnConfiguring(optionsBuilder);
         }
 
+        /// <summary>
+        /// Создание модели базы данных.
+        /// </summary>
+        /// <param name="modelBuilder">Построитель модели.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

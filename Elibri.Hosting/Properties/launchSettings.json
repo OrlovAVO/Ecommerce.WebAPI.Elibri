@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Elibri.Api": {
+    "swagger": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -19,25 +19,6 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://25.49.57.113:4000"
-    },
-
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:5000/swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-
-    "Container (Dockerfile)": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:8000",
-      "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "8080"
-      },
-      "publishAllPorts": true
     }
   }
 }

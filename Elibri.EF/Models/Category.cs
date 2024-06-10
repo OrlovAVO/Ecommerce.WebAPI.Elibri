@@ -1,18 +1,28 @@
-﻿using Elibri.EF.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elibri.EF.Models
+﻿namespace Elibri.EF.Models
 {
+    /// <summary>
+    /// Модель категории.
+    /// </summary>
     public class Category
     {
+        /// <summary>
+        /// Идентификатор категории.
+        /// </summary>
         public int CategoryId { get; set; }
-        public string Name { get; set; }
-        public string Image { get; set; }
-        public ICollection<Product> Products { get; set; }
 
+        /// <summary>
+        /// Наименование категории.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Изображение категории.
+        /// </summary>
+        public string Image { get; set; }
+
+        /// <summary>
+        /// Продукты в данной категории.
+        /// </summary>
+        public ICollection<Product> Products { get; set; }
     }
 }

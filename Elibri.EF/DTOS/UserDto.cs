@@ -1,19 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Elibri.EF.DTOS
 {
+    /// <summary>
+    /// DTO для пользователя.
+    /// </summary>
     public class UserDTO
     {
+        /// <summary>
+        /// Идентификатор пользователя.
+        /// </summary>
         public string Id { get; set; }
-        public string UserName { get; set; }
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
 
+        /// <summary>
+        /// Имя пользователя.
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// Электронная почта пользователя.
+        /// </summary>
+        [Required(ErrorMessage = "Электронная почта обязательна.")]
+        [EmailAddress(ErrorMessage = "Неправильная электронная почта")]
+        public string Email { get; set; }
     }
 }

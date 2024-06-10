@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elibri.EF.DTOS
+﻿namespace Elibri.EF.DTOS
 {
+    /// <summary>
+    /// DTO для элементов в корзине покупок.
+    /// </summary>
     public class CartItemDTO
     {
+        /// <summary>
+        /// Идентификатор продукта.
+        /// </summary>
         public int ProductId { get; set; }
-        public int Quantity { get; set; }
-        public string Image { get; set; }
 
+        /// <summary>
+        /// Количество продукта в корзине.
+        /// </summary>
+        public int Quantity { get; set; }
+
+        /// <summary>
+        /// Изображение продукта.
+        /// </summary>
+        public string Image { get; set; }
     }
 }

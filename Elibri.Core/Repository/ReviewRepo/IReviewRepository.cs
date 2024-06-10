@@ -1,20 +1,16 @@
 ﻿using Elibri.EF.Models;
-using Elibri.Core.Repository.GenericRepo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elibri.Core.Repository.ReviewRepo
 {
     public class IReviewRepository
     {
+        // Конструктор класса IReviewRepository.
         public IReviewRepository(Context context)
         {
             Context = context;
         }
 
+        // Свойство для доступа к контексту базы данных.
         public Context Context { get; }
     }
 }

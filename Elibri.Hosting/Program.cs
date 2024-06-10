@@ -19,10 +19,10 @@ namespace Elibri.Hosting
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Load configuration
+            // Загрузка конфигурации
             IConfiguration configuration = builder.Configuration;
 
-            // Add services to the container
+            // Добавление сервисов в контейнер
             builder.Services.AddEFServices(configuration);
             builder.Services.AddCoreServices(configuration);
             builder.Services.AddAuthServices(configuration);
@@ -33,7 +33,7 @@ namespace Elibri.Hosting
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
             });
 
-            // Add CORS policy
+            // Добавление политики CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
@@ -47,12 +47,12 @@ namespace Elibri.Hosting
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline
+            // Настройка конвейера HTTP-запросов
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
 
-                // Enable Swagger for Development environment or for Swagger profile
+                // Включение Swagger для среды разработки или для профиля Swagger
                 if (app.Environment.EnvironmentName == "Development" || app.Environment.EnvironmentName == "swagger")
                 {
                     app.UseSwagger();
